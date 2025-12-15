@@ -10,10 +10,10 @@ const Hero = () => {
         {/* Top Section */}
         <div className="bg-white px-8 py-12 lg:px-20 lg:pt-24 lg:pb-16 flex flex-col justify-center">
           <h1 className="text-5xl lg:text-[71px] font-bold text-gray-900 tracking-tight mb-4">
-            Apply for a ETA
+            Apply for a UK ETA
           </h1>
           <h2 className="text-4xl lg:text-[55px] text-gray-900 tracking-tight leading-none mb-8">
-            <span className="block">KSA</span>
+            <span className="block">United Kingdom</span>
             <span className="block">Electronic Travel</span>
             <span className="block">Authorization</span>
           </h2>
