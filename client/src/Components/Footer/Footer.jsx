@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaPhone, FaEnvelope, FaGlobe, FaLocationDot, FaCrown } from 'react-icons/fa6';
+import { FaPhone, FaEnvelope, FaGlobe, FaLocationDot } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -8,25 +9,39 @@ const Footer = () => {
         
         {/* TOP ROW - LINKS */}
         <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 text-[10px] sm:text-xs uppercase tracking-widest font-medium text-gray-600 mb-6 text-center">
-          <a href="#" className="hover:text-black transition-colors">Terms of Service</a>
+          <Link to="/terms-of-Service" className="hover:text-black transition-colors">
+            Terms of Service
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">Purchase and Refund Policy</a>
+          <Link to="/purchase-Refund" className="hover:text-black transition-colors">
+            Purchase and Refund Policy
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">Cookie Policy</a>
+          <Link to="/cookies" className="hover:text-black transition-colors">
+            Cookie Policy
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
+          <Link to="/privacy-policy" className="hover:text-black transition-colors">
+            Privacy Policy
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">Disclaimer</a>
+          <Link to="/disclaimer" className="hover:text-black transition-colors">
+            Disclaimer
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">About Us</a>
+          <Link to="/about" className="hover:text-black transition-colors">
+            About Us
+          </Link>
           <span>|</span>
-          <a href="#" className="hover:text-black transition-colors">Contact</a>
+          <Link to="/contact-us" className="hover:text-black transition-colors">
+            Contact
+          </Link>
         </div>
 
         {/* DISCLAIMER TEXT */}
         <div className="text-[11px] leading-relaxed text-center text-gray-700 max-w-7xl mx-auto mb-6">
           <p>
-            This website is operated by <span className="font-bold text-black">Sebe Inc.</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
+            This website is operated by <span className="font-bold text-black">Sebe Inc.</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
           </p>
         </div>
 
@@ -40,13 +55,13 @@ const Footer = () => {
           
           {/* Logo Construction */}
           <div className="flex items-center gap-2 mb-4 lg:mb-0">
-          <div className="flex items-center">
-    <img 
-      src="LOGO.png" 
-      alt="Logo" 
-      className="h-20 w-32"   // 👈 size control
-    />
-  </div>
+            <Link to="/" className="flex items-center">
+              <img 
+                src="LOGO.png" 
+                alt="Logo" 
+                className="h-20 w-32 object-contain"
+              />
+            </Link>
           </div>
 
           {/* Contact Details Grid */}
@@ -69,8 +84,7 @@ const Footer = () => {
 
             <div className="flex items-center gap-2">
               <FaLocationDot className="text-black" />
-              <span>King Khalid Str., Dammam,
-              Kingdom of Saudi Arabia</span>
+              <span className="text-right sm:text-left">King Khalid Str., Dammam,<br className="sm:hidden"/> Kingdom of Saudi Arabia</span>
             </div>
 
           </div>

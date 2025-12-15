@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-
+// Components Imports
 import Footer from "./Components/Footer/Footer";
 import Home from "./Components/Home/Home";
 import EtaApplicationForm from "./Components/EtaApplicationForm/EtaApplicationForm";
@@ -14,10 +14,17 @@ import PrivacyPolicy from "./Components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./Components/TermsOfService/Disclaimer";
 import Navbar from "./Components/Navbar/Navbar";
 
+// Import ScrollToTop Component
+import ScrollToTop from "./Components/ScrollToTop"; 
+
 function App() {
   return (
     <Router>
+     
+      <ScrollToTop />
+      
       <Navbar />
+      
       <Routes>
         {/* Home Route */}
         <Route path="/" element={<Home />} />
@@ -29,17 +36,9 @@ function App() {
         <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
-
-
-
-
-
-
-
-        
       </Routes>
 
-      {/* Common Footer */}
+
       <Footer />
     </Router>
   );
