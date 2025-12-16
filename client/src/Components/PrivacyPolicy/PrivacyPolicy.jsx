@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">Sebe Inc. is a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
+          <p className="mb-2">WSB World is a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
           <p>We provide optional, third-party assistance for UK ETA applications. We are not affiliated with the UK government.</p>
         </>
       )
@@ -95,7 +95,7 @@ const PrivacyPolicy = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">Sebe Inc.</p>
+             <p className="text-sm font-bold">WSB World</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>

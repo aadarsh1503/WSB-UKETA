@@ -7,7 +7,7 @@ const CookiePolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">This website is owned by <span className="font-bold text-black">Sebe Inc.</span>, a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
+          <p className="mb-2">This website is owned by <span className="font-bold text-black">WSB World</span>, a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
           <p>We determine the purpose and scope of how cookies are used on this site.</p>
         </>
       )
@@ -114,7 +114,7 @@ const CookiePolicy = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">Sebe Inc.</p>
+             <p className="text-sm font-bold">WSB World</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>

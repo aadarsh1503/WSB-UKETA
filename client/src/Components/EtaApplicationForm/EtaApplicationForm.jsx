@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaChevronDown, FaCheck, FaPassport, FaGlobe, FaSearch, FaUser } from 'react-icons/fa';
+import { FaChevronDown, FaCheck, FaPassport, FaGlobe, FaSearch, FaUser, FaShieldAlt, FaPlaneDeparture, FaArrowRight } from 'react-icons/fa';
 
 // --- COMPONENTS ---
 
@@ -128,6 +128,11 @@ const FloatingInput = ({ label, name, value, onChange, icon: Icon }) => {
 const EtaApplicationForm = () => {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // State for submission process
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     nationality: '',
     passportNumber: '',
@@ -135,7 +140,6 @@ const EtaApplicationForm = () => {
     secondNationality: '',
   });
 
-  // NEW STATE: Animation handling for the second nationality dropdown
   const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   useEffect(() => {
@@ -151,16 +155,13 @@ const EtaApplicationForm = () => {
       .catch((error) => console.error("Error fetching countries:", error));
   }, []);
 
-  // NEW EFFECT: Handle the overflow toggle
   useEffect(() => {
     let timer;
     if (formData.otherNationalities === 'yes') {
-      // Wait for the slide-down animation (500ms) to finish, then allow overflow
       timer = setTimeout(() => {
         setIsSectionVisible(true);
       }, 500);
     } else {
-      // Immediately hide overflow when closing so the animation looks smooth
       setIsSectionVisible(false);
     }
     return () => clearTimeout(timer);
@@ -183,7 +184,54 @@ const EtaApplicationForm = () => {
     }));
   };
 
+  // --- SUBMIT LOGIC ---
+  const handleSubmit = async () => {
+    if (!formData.nationality || !formData.passportNumber || !formData.otherNationalities) {
+      alert("Please fill in all required fields marked with *");
+      return;
+    }
+
+    if (formData.otherNationalities === 'yes' && !formData.secondNationality) {
+      alert("Please select your second nationality.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Connect to Backend
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // --- SHOW SUCCESS SCREEN ---
+        // Add a small artificial delay for smoother UX transition
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setIsSuccess(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 800);
+      } else {
+        alert(`Error: ${data.message || 'Something went wrong.'}`);
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('Submission Error:', error);
+      alert("Network Error: Could not connect to the server.");
+      setIsSubmitting(false);
+    }
+  };
+
   const calculateProgress = () => {
+    if (isSuccess) return 100;
+    
     let filled = 0;
     let total = 3;
     if (formData.nationality) filled++;
@@ -198,13 +246,70 @@ const EtaApplicationForm = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen  bg-white flex flex-col items-center justify-center space-y-4">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-4">
          <div className="w-16 h-16 border-4 border-gray-100 border-t-[#106cb6] rounded-full animate-spin"></div>
          <p className="text-gray-400 font-medium tracking-widest uppercase text-sm animate-pulse">Initializing Secure Form...</p>
       </div>
     );
   }
 
+  // --- RENDER SUCCESS VIEW ---
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen mt-20 bg-white text-gray-900 font-sans flex flex-col items-center p-6 justify-center">
+        {/* Confetti / Decor Background */}
+        <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-48 h-48 bg-green-50 rounded-full blur-3xl opacity-50"></div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-lg bg-white p-8 md:p-12 animate-fade-in-up text-center">
+          
+          {/* Animated Success Icon */}
+          <div className="mx-auto mb-8 w-24 h-24 bg-[#106cb6]/10 rounded-full flex items-center justify-center relative">
+             <div className="absolute inset-0 border-4 border-[#106cb6]/20 rounded-full animate-ping"></div>
+             <FaCheck className="text-5xl text-[#106cb6] relative z-10" />
+          </div>
+
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 tracking-tight">
+            Information <span className="text-[#106cb6]">Received.</span>
+          </h1>
+
+          <div className="space-y-4 mb-10">
+            <p className="text-lg text-gray-600 font-medium leading-relaxed">
+              Your details have been securely transmitted to our processing center.
+            </p>
+            <p className="text-gray-400 text-sm">
+              We have initiated the review protocol for your Electronic Travel Authorisation. No further action is required from you at this moment.
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-6 mb-10 border border-gray-100 flex items-center justify-between">
+             <div className="flex items-center gap-3">
+                <FaShieldAlt className="text-[#106cb6]" />
+                <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">Status</span>
+             </div>
+             <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold uppercase rounded-full tracking-wide">
+               Processing
+             </span>
+          </div>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="group relative w-full py-4 bg-gray-900 text-white font-bold text-sm tracking-[0.2em] uppercase overflow-hidden rounded-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-3">
+              Return Back <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+            </span>
+            <div className="absolute inset-0 bg-[#106cb6] transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+          </button>
+          
+        </div>
+      </div>
+    );
+  }
+
+  // --- RENDER FORM VIEW ---
   return (
     <div className="min-h-screen mt-32 bg-white text-gray-900 font-sans flex flex-col items-center p-6 selection:bg-blue-100">
       
@@ -231,7 +336,7 @@ const EtaApplicationForm = () => {
           </p>
         </div>
 
-        <form className="space-y-12 pb-24">
+        <form className="space-y-12 pb-24" onSubmit={(e) => e.preventDefault()}>
           
           {/* 1. Current Nationality */}
           <div className="relative z-40">
@@ -292,9 +397,7 @@ const EtaApplicationForm = () => {
             </div>
           </div>
 
-          {/* Conditional Second Nationality 
-              FIXED: Uses dynamic overflow class based on timer
-          */}
+          {/* Conditional Second Nationality */}
           <div 
             className={`
               transition-all relative z-10 duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
@@ -302,7 +405,6 @@ const EtaApplicationForm = () => {
               ${isSectionVisible ? 'overflow-visible' : 'overflow-hidden'}
             `}
           >
-            {/* Added padding bottom to ensure no clipping during slight transitions */}
             <div className="pt-6 pb-2 relative z-50">
               <CustomSearchableSelect 
                 label="Second Nationality"
@@ -319,12 +421,27 @@ const EtaApplicationForm = () => {
           <div className="pt-4 relative z-0">
             <button
               type="button"
-              className="group relative w-full py-6 bg-gray-900 text-white font-bold text-lg tracking-[0.2em] uppercase overflow-hidden rounded-sm transition-all duration-300 hover:shadow-2xl hover:shadow-gray-400/50 hover:-translate-y-1"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className={`
+                group relative cursor-pointer  w-full py-6 bg-gray-900 text-white font-bold text-lg tracking-[0.2em] uppercase overflow-hidden rounded-sm transition-all duration-300 
+                ${isSubmitting ? 'cursor-not-allowed opacity-80' : 'hover:shadow-2xl hover:shadow-gray-400/50 hover:-translate-y-1'}
+              `}
             >
               <span className="relative z-10 flex items-center justify-center gap-4">
-                Submit Application <FaCheck className="group-hover:scale-125 transition-transform duration-300"/>
+                {isSubmitting ? (
+                  <>
+                    Securely Transmitting... <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  </>
+                ) : (
+                  <>
+                    Submit Application <FaCheck className="group-hover:scale-125 transition-transform duration-300"/>
+                  </>
+                )}
               </span>
-              <div className="absolute inset-0 bg-[#106cb6] transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+              {!isSubmitting && (
+                <div className="absolute inset-0 bg-[#106cb6] transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+              )}
             </button>
             <p className="text-center text-gray-400 text-xs mt-6">
               By clicking submit, you agree to the Terms of Service.

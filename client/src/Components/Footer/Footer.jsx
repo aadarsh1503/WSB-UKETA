@@ -41,14 +41,15 @@ const Footer = () => {
         {/* DISCLAIMER TEXT */}
         <div className="text-[11px] leading-relaxed text-center text-gray-700 max-w-7xl mx-auto mb-6">
           <p>
-            This website is operated by <span className="font-bold text-black">Sebe Inc.</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
+            This website is operated by <span className="font-bold text-black">WSB World</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
           </p>
         </div>
 
         {/* COPYRIGHT */}
         <div className="text-center text-xs font-medium text-black mb-12">
-          © 2025 All Rights Reserved.
-        </div>
+  © {new Date().getFullYear()} All Rights Reserved.
+</div>
+
 
         {/* BOTTOM ROW - INFO & LOGO */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-4 text-xs lg:text-sm text-gray-700">
@@ -78,9 +79,17 @@ const Footer = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <FaGlobe className="text-black" />
-              <span>Sebe Inc</span>
-            </div>
+  <a
+    href="https://wsb.world/"
+    className="flex items-center gap-2"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FaGlobe className="text-black" />
+    <span>wsb.world</span>
+  </a>
+</div>
+
 
             <div className="flex items-center gap-2">
               <FaLocationDot className="text-black" />

@@ -38,7 +38,7 @@ const AboutUs = () => {
           {/* Text Content */}
           <div className="space-y-8 text-gray-800 text-lg lg:text-xl leading-relaxed">
             <p>
-              Sebe Inc. is an independent travel support provider dedicated to helping travelers complete their UK Electronic Travel Authorisation (ETA) application with accuracy, clarity, and confidence. Our goal is to make the process easier through guided assistance, helpful tools, and responsive support—without the confusion that often comes with government portals.
+              WSB World is an independent travel support provider dedicated to helping travelers complete their UK Electronic Travel Authorisation (ETA) application with accuracy, clarity, and confidence. Our goal is to make the process easier through guided assistance, helpful tools, and responsive support—without the confusion that often comes with government portals.
             </p>
             <p>
               We are not affiliated with the UK government. Instead, we offer a fully optional service designed for those who prefer a streamlined and supported experience when submitting their ETA application.

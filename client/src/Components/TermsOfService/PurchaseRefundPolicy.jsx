@@ -7,7 +7,7 @@ const PurchaseRefundPolicy = () => {
       title: "Service Overview",
       content: (
         <>
-          <p className="mb-2">Sebe Inc. provides optional, paid support for UK ETA applications. Our service includes human-reviewed document checks, submission support, and guidance.</p>
+          <p className="mb-2">WSB World provides optional, paid support for UK ETA applications. Our service includes human-reviewed document checks, submission support, and guidance.</p>
           <p>We are not affiliated with the UK government. You may apply independently at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a>. This is a personalized digital support service.</p>
         </>
       )
@@ -97,7 +97,7 @@ const PurchaseRefundPolicy = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">Sebe Inc.</p>
+             <p className="text-sm font-bold">WSB World</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>

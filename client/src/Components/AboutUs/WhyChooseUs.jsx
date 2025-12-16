@@ -35,7 +35,7 @@ const WhyChooseUs = () => {
 
         {/* Contact Details */}
         <div className="space-y-1 mb-12 text-lg text-gray-800">
-          <p className="font-bold text-gray-900">Sebe Inc.</p>
+          <p className="font-bold text-gray-900">WSB World</p>
           <p>King Khalid Str., Dammam, Kingdom of Saudi Arabia</p>
           <p>
             Email: <a href="mailto:info@eeta.uk" className="text-blue-700 hover:underline">info@eeta.uk</a>

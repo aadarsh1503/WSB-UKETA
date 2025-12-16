@@ -7,7 +7,7 @@ const TermsOfService = () => {
       title: "Role & Scope",
       content: (
         <>
-          <p className="mb-2">Sebe Inc. provides optional, fee-based support for travelers applying for the UK ETA. We assist with review, guidance, and processing.</p>
+          <p className="mb-2">WSB World provides optional, fee-based support for travelers applying for the UK ETA. We assist with review, guidance, and processing.</p>
           <p>We are a third-party provider, not affiliated with the UK government. You may apply directly at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a> without our fees.</p>
         </>
       )
@@ -25,7 +25,7 @@ const TermsOfService = () => {
     },
     {
       title: "Authorization",
-      content: "By using our platform, you authorize Sebe Inc. to act on your behalf to prepare and submit your ETA application to UK authorities and communicate with third parties for this purpose."
+      content: "By using our platform, you authorize WSB World to act on your behalf to prepare and submit your ETA application to UK authorities and communicate with third parties for this purpose."
     },
     {
       title: "Turnaround",
@@ -42,7 +42,7 @@ const TermsOfService = () => {
     },
     {
       title: "Content Ownership",
-      content: "All content, code, and design on visauketa.com is owned by Sebe Inc. Unauthorized reproduction or distribution is prohibited. Third-party trademarks belong to their respective owners."
+      content: "All content, code, and design on visauketa.com is owned by WSB World Unauthorized reproduction or distribution is prohibited. Third-party trademarks belong to their respective owners."
     },
     {
       title: "Prohibited Actions",
@@ -50,7 +50,7 @@ const TermsOfService = () => {
     },
     {
       title: "Disclaimers",
-      content: "We do not guarantee approval. Services are provided 'as is'. Sebe Inc. disclaims liability for indirect or consequential damages to the extent permitted by law."
+      content: "We do not guarantee approval. Services are provided 'as is'. WSB World disclaims liability for indirect or consequential damages to the extent permitted by law."
     },
     {
       title: "Termination",
@@ -82,7 +82,7 @@ const TermsOfService = () => {
             </p>
           </div>
           <div className="text-right mt-4 md:mt-0">
-             <p className="text-sm font-bold">Sebe Inc.</p>
+             <p className="text-sm font-bold">WSB World</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>
