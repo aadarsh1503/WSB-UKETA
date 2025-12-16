@@ -1,0 +1,93 @@
+/* Components/EmailWidget/EmailWidget.css */
+
+.email-widget-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .email-widget-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    
+    /* Glassmorphism & Light Theme */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    
+    /* Initial Shadow/Glow */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    overflow: hidden;
+  }
+  
+  /* The Icon Style */
+  .email-icon {
+    font-size: 28px;
+    color: #2563eb; /* Modern Blue */
+    z-index: 2;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Hover Effects */
+  .email-widget-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 
+      0 0 20px rgba(37, 99, 235, 0.4), /* Blue Glow */
+      0 0 40px rgba(37, 99, 235, 0.2); 
+    border-color: #827127;
+  }
+  
+  .email-widget-btn:hover .email-icon {
+    transform: scale(1.1);
+    color: #827127;
+  }
+  
+  /* Click/Active Effect */
+  .email-widget-btn:active {
+    transform: scale(0.95);
+  }
+  
+  /* Futuristic Pulse Animation Ring */
+  .email-widget-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(37, 99, 235, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    z-index: 0;
+    transition: all 0.5s ease;
+  }
+  
+  .email-widget-btn:hover::before {
+    animation: pulse-ring 2s infinite;
+  }
+  
+  @keyframes pulse-ring {
+    0% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(2);
+      opacity: 0;
+    }
+  }

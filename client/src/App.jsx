@@ -14,8 +14,9 @@ import PrivacyPolicy from "./Components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./Components/TermsOfService/Disclaimer";
 import Navbar from "./Components/Navbar/Navbar";
 
-// Import ScrollToTop Component
+// Import ScrollToTop & EmailWidget
 import ScrollToTop from "./Components/ScrollToTop"; 
+import EmailWidget from "./Components/EmailWidget/EmailWidget"; // <--- IMPORT HERE
 
 function App() {
   return (
@@ -25,8 +26,8 @@ function App() {
       
       <Navbar />
       
+      {/* Routes */}
       <Routes>
-        {/* Home Route */}
         <Route path="/" element={<Home />} />
         <Route path="/apply" element={<EtaApplicationForm />} />
         <Route path="/about" element={<AboutUs />} />
@@ -38,6 +39,8 @@ function App() {
         <Route path="/disclaimer" element={<Disclaimer />} />
       </Routes>
 
+      {/* Place the Widget here so it sits on top of everything */}
+      <EmailWidget /> 
 
       <Footer />
     </Router>
