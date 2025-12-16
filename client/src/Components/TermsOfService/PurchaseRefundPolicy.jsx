@@ -39,7 +39,7 @@ const PurchaseRefundPolicy = () => {
       title: "How to Request",
       content: (
         <>
-          <p className="mb-2">Contact <a href="mailto:support@visauketa.com" className="font-mono text-black border-b border-gray-300 hover:border-black transition-colors">support@visauketa.com</a> with:</p>
+          <p className="mb-2">Contact <a href="mailto:info@eeta.uk" className="font-mono text-black border-b border-gray-300 hover:border-black transition-colors">info@eeta.uk</a> with:</p>
           <ul className="list-disc pl-4 space-y-1 marker:text-gray-400">
             <li>Full Name</li>
             <li>Order/Application Number</li>
@@ -148,8 +148,8 @@ const PurchaseRefundPolicy = () => {
             <p className="text-sm text-gray-500">51 Lorridge St, Richmond Hill, ON</p>
           </div>
           <div className="flex flex-col md:items-end">
-            <a href="mailto:support@visauketa.com" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
-              support@visauketa.com
+            <a href="mailto:info@eeta.uk" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
+              info@eeta.uk
             </a>
             <span className="font-mono text-sm px-2">613-454-5636</span>
           </div>

@@ -165,8 +165,8 @@ const CookiePolicy = () => {
             <p className="text-sm text-gray-500">51 Lorridge St, Richmond Hill, ON</p>
           </div>
           <div className="flex flex-col md:items-end">
-            <a href="mailto:support@visauketa.com" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
-              support@visauketa.com
+            <a href="mailto:info@eeta.uk" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
+              info@eeta.uk
             </a>
             <span className="font-mono text-sm px-2">613-454-5636</span>
           </div>
