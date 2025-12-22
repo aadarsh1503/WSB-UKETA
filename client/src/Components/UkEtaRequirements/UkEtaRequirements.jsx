@@ -34,11 +34,10 @@ const allCountries = [
   { name: "Hong Kong", code: "hk" },
   { name: "Hungary", code: "hu" },
   { name: "Iceland", code: "is" },
-  { name: "Israel", code: "il" },
   { name: "Italy", code: "it" },
   { name: "Japan", code: "jp" },
   { name: "Kiribati", code: "ki" },
-  { name: "Korea (South)", code: "kr" }, // Input mein South Korea tha
+  { name: "Korea (South)", code: "kr" }, 
   { name: "Kuwait", code: "kw" },
   { name: "Latvia", code: "lv" },
   { name: "Liechtenstein", code: "li" },
