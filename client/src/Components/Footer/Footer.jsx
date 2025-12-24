@@ -58,7 +58,7 @@ const Footer = () => {
           <div className="flex items-center gap-2 mb-4 lg:mb-0">
             <Link to="/" className="flex items-center">
               <img 
-                src="LOGO.png" 
+                src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1766578489/WSB_LOGO-1_jziy3c.png" 
                 alt="Logo" 
                 className="h-20 w-32 object-contain"
               />

@@ -56,8 +56,8 @@ const Navbar = () => {
         className={`fixed left-0 right-0 mx-auto transition-all duration-500 ease-in-out font-sans z-[100]
         ${isVisible || isMobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-[150%] opacity-0'} 
         ${isScrolled 
-          ? 'top-4 w-[92%] max-w-4xl rounded-full bg-white/95 backdrop-blur-md shadow-xl border border-gray-200 py-2 px-6' 
-          : 'top-0 w-full rounded-none bg-white border-b border-gray-100 py-3 px-6 lg:px-12' 
+          ? 'top-4 w-[92%] max-w-4xl rounded-full bg-white/95 backdrop-blur-md shadow-xl border border-gray-200 py-1 px-6' 
+          : 'top-0 w-full rounded-none bg-white border-b border-gray-100 py-1 px-6 lg:px-12' 
         }`}
       >
         <div className="flex items-center justify-between h-full w-full">
@@ -65,9 +65,9 @@ const Navbar = () => {
           {/* LOGO */}
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center z-[110]">
             <img 
-              src="LOGO.png" 
+              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1766578489/WSB_LOGO-1_jziy3c.png" 
               alt="Logo" 
-              className={`transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`} 
+              className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-20'}`} 
             />
           </Link>
 
