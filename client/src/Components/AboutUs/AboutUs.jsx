@@ -2,7 +2,7 @@ import React from 'react';
 import { FaCheck } from 'react-icons/fa6';
 import FeatureCards from './FeatureCards';
 import WhyChooseUs from './WhyChooseUs';
-
+import about from "./about.webp"
 const AboutUs = () => {
   return (
     <>
@@ -20,7 +20,7 @@ const AboutUs = () => {
           */}
           <div className="h-full w-full overflow-hidden lg:rounded-tr-[140px]">
             <img 
-              src="https://i0.wp.com/visauketa.com/wp-content/uploads/2025/01/social-media-hero.jpg?w=960&ssl=1" 
+              src={about}
               alt="Professional woman using tablet" 
               className="w-full h-full object-cover object-top"
             />
@@ -38,7 +38,7 @@ const AboutUs = () => {
           {/* Text Content */}
           <div className="space-y-8 text-gray-800 text-lg lg:text-xl leading-relaxed">
             <p>
-              WSB World is an independent travel support provider dedicated to helping travelers complete their UK Electronic Travel Authorisation (ETA) application with accuracy, clarity, and confidence. Our goal is to make the process easier through guided assistance, helpful tools, and responsive support—without the confusion that often comes with government portals.
+              EETA UK is an independent travel support provider dedicated to helping travelers complete their UK Electronic Travel Authorisation (ETA) application with accuracy, clarity, and confidence. Our goal is to make the process easier through guided assistance, helpful tools, and responsive support—without the confusion that often comes with government portals.
             </p>
             <p>
               We are not affiliated with the UK government. Instead, we offer a fully optional service designed for those who prefer a streamlined and supported experience when submitting their ETA application.

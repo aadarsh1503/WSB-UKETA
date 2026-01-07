@@ -1,8 +1,8 @@
 import express from 'express';
-import { submitApplication } from '../controllers/applicationController.js';
+import { submitApplication,upload  } from '../controllers/applicationController.js';
 
 const router = express.Router();
 
-router.post('/', submitApplication);
+router.post('/', upload, submitApplication);
 
 export default router;

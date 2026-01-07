@@ -1,99 +1,111 @@
-import Joi from 'joi';
+import cloudinary from '../config/cloudinary.js';
 import sendEmail from '../utils/sendEmail.js';
+import multer from 'multer';
 
-// Validation Schema
-const validateApplication = (data) => {
-  const schema = Joi.object({
-    nationality: Joi.string().required().label('Current Nationality'),
-    passportNumber: Joi.string().required().label('Passport Number'),
-    otherNationalities: Joi.string().valid('yes', 'no').required(),
-    secondNationality: Joi.string().when('otherNationalities', {
-      is: 'yes',
-      then: Joi.required().label('Second Nationality'),
-      otherwise: Joi.allow(null, '').optional()
-    })
+// Multer setup
+const storage = multer.memoryStorage();
+export const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+}).any();
+
+// Helper to upload buffer to Cloudinary
+const uploadToCloudinary = (fileBuffer, folder) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: `uk_eta/${folder}` },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result.secure_url);
+      }
+    );
+    uploadStream.end(fileBuffer);
   });
-
-  return schema.validate(data);
 };
-
-// @desc    Process Application and Send Email
-// @route   POST /api/applications
 export const submitApplication = async (req, res) => {
   try {
-    // 1. Validate Input
-    const { error } = validateApplication(req.body);
-    if (error) {
-      return res.status(400).json({ 
-        success: false, 
-        message: error.details[0].message 
+    const data = req.body;
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+        return res.status(400).json({ success: false, message: "No files uploaded" });
+    }
+
+    // Use nationality keys to determine count
+    const applicantCount = Object.keys(data).filter(k => k.endsWith('_nationality')).length;
+    const applicantData = [];
+
+    console.log(`Processing ${applicantCount} applicants...`);
+
+    for (let i = 0; i < applicantCount; i++) {
+      const photoFile = files.find(f => f.fieldname === `photo_${i}`);
+      const passportFile = files.find(f => f.fieldname === `passport_${i}`);
+
+      // Upload to Cloudinary (Wrapped in try-catch to catch specific upload errors)
+      let photoUrl = 'No photo';
+      let passportUrl = 'No passport';
+
+      try {
+        if (photoFile) photoUrl = await uploadToCloudinary(photoFile.buffer, 'photos');
+        if (passportFile) passportUrl = await uploadToCloudinary(passportFile.buffer, 'passports');
+      } catch (uploadErr) {
+        console.error("Cloudinary Upload Error:", uploadErr);
+        throw new Error("Failed to upload images to cloud storage.");
+      }
+
+      applicantData.push({
+        nationality: data[`applicant_${i}_nationality`],
+        other: data[`applicant_${i}_other`], // Now matches the key from frontend
+        second: data[`applicant_${i}_second`] || 'N/A',
+        photoUrl,
+        passportUrl
       });
     }
 
-    const { nationality, passportNumber, otherNationalities, secondNationality } = req.body;
-    
-    // Generate a temporary Reference ID (since no DB ID exists)
-    const referenceId = `ETA-${Date.now()}`;
+    // Build Email HTML
+    let tableRows = '';
+    applicantData.forEach((app, idx) => {
+      tableRows += `
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 12px;"><b>Applicant ${idx + 1}</b></td>
+          <td style="padding: 12px;">${app.nationality}</td>
+          <td style="padding: 12px;">${app.other === 'yes' ? app.second : 'None'}</td>
+          <td style="padding: 12px;">
+            <a href="${app.photoUrl}">View Photo</a> | 
+            <a href="${app.passportUrl}">View Passport</a>
+          </td>
+        </tr>`;
+    });
 
-    // 2. Prepare Email Content
-    const emailMessage = `
-      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; border: 1px solid #e0e0e0;">
-        <h2 style="color: #106cb6; margin-bottom: 20px;">New UK ETA Application</h2>
-        <p>A new application form has been submitted via the website.</p>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-          <tr style="background-color: #f8f9fa;">
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold; width: 40%;">Reference ID:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">${referenceId}</td>
-          </tr>
-          <tr>
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold;">Nationality:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">${nationality}</td>
-          </tr>
-          <tr style="background-color: #f8f9fa;">
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold;">Passport Number:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">${passportNumber}</td>
-          </tr>
-          <tr>
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold;">Other Nationalities:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6; text-transform: uppercase;">${otherNationalities}</td>
-          </tr>
-          ${otherNationalities === 'yes' ? `
-          <tr style="background-color: #f8f9fa;">
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold;">Second Nationality:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">${secondNationality}</td>
-          </tr>
-          ` : ''}
-          <tr>
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-weight: bold;">Received At:</td>
-            <td style="padding: 12px; border: 1px solid #dee2e6;">${new Date().toLocaleString()}</td>
-          </tr>
+    const emailHtml = `
+      <div style="font-family: sans-serif;">
+        <h2>New UK ETA Group Application</h2>
+        <p><b>Payment ID:</b> ${data.paymentId}</p>
+        <p><b>Total Paid:</b> $${data.totalPaid}</p>
+        <table border="1" style="border-collapse: collapse; width: 100%;">
+          <thead>
+            <tr style="background: #f4f4f4;">
+              <th>Applicant</th><th>Nationality</th><th>Second Nat.</th><th>Files</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
         </table>
-        
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888; text-align: center;">
-          Sent securely from Khaleeji App Server
-        </div>
-      </div>
-    `;
+      </div>`;
 
-    // 3. Send Email
+    // Send Email
     await sendEmail({
-      email: process.env.EMAIL_TO, // aadarshchauhan35@gmail.com
-      subject: `ETA Application: ${passportNumber} - ${nationality}`,
-      message: emailMessage
+      email: process.env.EMAIL_TO,
+      subject: `New ETA Order: ${data.paymentId}`,
+      message: emailHtml,
     });
 
-    // 4. Response
-    return res.status(200).json({
-      success: true,
-      message: 'Application received and email sent successfully.',
-    });
+    res.status(200).json({ success: true, message: "Application processed" });
 
   } catch (error) {
-    console.error('Email Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to send application email.'
+    console.error("Full Controller Error:", error);
+    res.status(500).json({ 
+        success: false, 
+        message: error.message || "Internal Server Error" 
     });
   }
 };

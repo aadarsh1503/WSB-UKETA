@@ -7,7 +7,7 @@ const CookiePolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">This website is owned by <span className="font-bold text-black">WSB World</span>, a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
+          <p className="mb-2">This website is owned by <span className="font-bold text-black">EETA UK</span>, a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
           <p>We determine the purpose and scope of how cookies are used on this site.</p>
         </>
       )
@@ -114,7 +114,7 @@ const CookiePolicy = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">WSB World</p>
+             <p className="text-sm font-bold">EETA UK</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>
@@ -122,7 +122,7 @@ const CookiePolicy = () => {
         {/* INTRO TEXT */}
         <div className="mb-16 max-w-3xl">
           <p className="text-lg text-gray-600 leading-relaxed">
-            This policy explains how <span className="text-black font-semibold">visauketa.com</span> uses cookies and tracking technologies, and outlines your rights to control them.
+            This policy explains how <span className="text-black font-semibold">eeta.uk</span> uses cookies and tracking technologies, and outlines your rights to control them.
           </p>
         </div>
 

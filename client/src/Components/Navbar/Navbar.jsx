@@ -65,7 +65,7 @@ const Navbar = () => {
           {/* LOGO */}
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center z-[110]">
             <img 
-              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1766578489/WSB_LOGO-1_jziy3c.png" 
+              src="LOGO1.png" 
               alt="Logo" 
               className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-20'}`} 
             />

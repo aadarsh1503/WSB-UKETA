@@ -1,5 +1,5 @@
 import React from 'react';
-
+import hero from "./hero.webp"
 const Hero = () => {
   return (
     <div className="flex flex-col lg:flex-row w-full mt-32 font-sans relative">
@@ -56,7 +56,7 @@ const Hero = () => {
        
         <div className="w-full h-full lg:absolute lg:inset-0 overflow-hidden lg:rounded-tl-[100px]">
           <img 
-            src="https://i0.wp.com/visauketa.com/wp-content/uploads/2025/06/herohero.png?w=1024&ssl=1" 
+            src={hero}
             alt="London Red Bus and Big Ben" 
             className="w-full h-full object-cover object-center"
           />

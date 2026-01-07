@@ -41,7 +41,7 @@ const Footer = () => {
         {/* DISCLAIMER TEXT */}
         <div className="text-[11px] leading-relaxed text-center text-gray-700 max-w-7xl mx-auto mb-6">
           <p>
-            This website is operated by <span className="font-bold text-black">WSB World</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
+            This website is operated by <span className="font-bold text-black">EETA UK</span>, an independent travel support company based in Toronto, Canada (OCN Registration Number: <span className="text-blue-700 font-medium">2396200</span>). We are not affiliated with the UK government or any official authority. Our service offers optional, fee-based assistance for travelers applying for the United Kingdom’s Electronic Travel Authorization (ETA). This includes application guidance, document validation, and customer support. You are not required to use our service—travelers may apply directly through the official UK government website at <a href="https://www.gov.uk" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-bold hover:underline">www.gov.uk</a> without incurring additional service fees.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
           <div className="flex items-center gap-2 mb-4 lg:mb-0">
             <Link to="/" className="flex items-center">
               <img 
-                src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1766578489/WSB_LOGO-1_jziy3c.png" 
+                src="LOGO1.png" 
                 alt="Logo" 
                 className="h-20 w-32 object-contain"
               />
@@ -80,13 +80,13 @@ const Footer = () => {
 
             <div className="flex items-center gap-2">
   <a
-    href="https://wsb.world/"
+    href="https://eeta.uk/"
     className="flex items-center gap-2"
     target="_blank"
     rel="noopener noreferrer"
   >
     <FaGlobe className="text-black" />
-    <span>wsb.world</span>
+    <span>eeta.uk</span>
   </a>
 </div>
 

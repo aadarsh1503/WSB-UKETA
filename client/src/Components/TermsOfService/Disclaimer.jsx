@@ -7,7 +7,7 @@ const Disclaimer = () => {
       title: "No Govt. Affiliation",
       content: (
         <>
-          <p className="mb-2">WSB World is an independent company. We are <span className="font-bold text-black">not affiliated with</span>, endorsed by, or acting on behalf of the UK Home Office or any government body.</p>
+          <p className="mb-2">EETA UK is an independent company. We are <span className="font-bold text-black">not affiliated with</span>, endorsed by, or acting on behalf of the UK Home Office or any government body.</p>
           <p className="text-xs text-gray-500">We offer optional support services. You may apply directly at <a href="https://www.gov.uk" className="text-black underline font-bold hover:no-underline">www.gov.uk</a> without our fees.</p>
         </>
       )
@@ -36,7 +36,7 @@ const Disclaimer = () => {
     },
     {
       title: "Liability Limits",
-      content: "To the extent permitted by law, WSB World disclaims all liability for damages (denials, delays, data issues) resulting from the use of this site or our services."
+      content: "To the extent permitted by law, EETA UK disclaims all liability for damages (denials, delays, data issues) resulting from the use of this site or our services."
     },
     {
       title: "External Resources",
@@ -78,7 +78,7 @@ const Disclaimer = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">WSB World</p>
+             <p className="text-sm font-bold">EETA UK</p>
              <p className="text-xs text-gray-500">OCN: 2396200</p>
           </div>
         </div>
@@ -86,7 +86,7 @@ const Disclaimer = () => {
         {/* INTRO TEXT */}
         <div className="mb-16 max-w-3xl">
           <p className="text-lg text-gray-600 leading-relaxed">
-            This Disclaimer applies to <span className="text-black font-semibold">visauketa.com</span>. Please read carefully before using our services.
+            This Disclaimer applies to <span className="text-black font-semibold">eeta.uk</span>. Please read carefully before using our services.
           </p>
         </div>
 

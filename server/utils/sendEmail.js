@@ -1,16 +1,13 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true, // true for port 465
+    host: 'smtp.titan.email',
+    port: 465,
+    secure: true, 
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.EMAIL_USER, // root@khaleeji.app
+      pass: process.env.EMAIL_PASS, // 1*y)6Hk?gwKn&~]
     },
   });
 

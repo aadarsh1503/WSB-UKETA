@@ -88,7 +88,7 @@ const ContactSection = () => {
                 Company
               </h4>
               <p className="text-xl md:text-2xl font-medium text-black">
-                WSB World
+                EETA UK
               </p>
             </div>
 
