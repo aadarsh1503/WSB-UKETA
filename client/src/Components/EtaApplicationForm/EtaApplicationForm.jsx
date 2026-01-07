@@ -256,7 +256,7 @@ const EtaApplicationForm = () => {
       <div className="min-h-screen mt-10 bg-gray-50 py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <header className="mb-12 border-l-4 border-[#106cb6] pl-6">
-            <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase">UK ETA Group Application</h1>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tighter uppercase">UK EETA Group Application</h1>
             <p className="text-gray-500 mt-2 font-medium">Processing Fee: $120.00 USD per applicant</p>
           </header>
 
