@@ -28,6 +28,9 @@ export const submitApplication = async (req, res) => {
     const count = parseInt(data.applicantCount);
     const applicantData = [];
 
+    // Capture user email for the confirmation message
+    const primaryUserEmail = data[`app_0_email`];
+
     for (let i = 0; i < count; i++) {
         const photoFile = files.find(f => f.fieldname === `photo_${i}`);
         const passportFile = files.find(f => f.fieldname === `passport_${i}`);
@@ -82,7 +85,7 @@ export const submitApplication = async (req, res) => {
         });
     }
 
-    // --- FULLY COMPATIBLE HTML TEMPLATE ---
+    // --- FULLY COMPATIBLE HTML TEMPLATE (ADMIN SIDE - UNCHANGED) ---
     let html = `
     <!DOCTYPE html>
     <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -286,11 +289,64 @@ export const submitApplication = async (req, res) => {
     </html>
     `;
 
+    // --- USER SIDE EMAIL TEMPLATE (NEW) ---
+    let userHtml = `
+    <!DOCTYPE html>
+    <html>
+    <body style="margin: 0; padding: 0; background-color: #f3f6ff; font-family: Arial, sans-serif;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#f3f6ff">
+        <tr>
+          <td align="center" style="padding: 20px 0;">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+              <tr>
+                <td align="center" bgcolor="#002d85" style="padding: 40px 0;">
+                  <img src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1767782485/LOGO1_1_hxc7s1.png" alt="Logo" width="120" style="filter: brightness(0) invert(1);" />
+                  <h2 style="color: #ffffff; margin-top: 20px;">Application Received Successfully</h2>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 40px; color: #4a5568; line-height: 1.6;">
+                  <p>Dear Applicant,</p>
+                  <p>Thank you for choosing <strong>UK EETA Online Services</strong>. We have received your application group and our processing team is now working on it.</p>
+                  
+                  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; margin: 25px 0; border-radius: 5px;">
+                    <p style="margin: 0; font-size: 14px;"><strong>Transaction ID:</strong> ${data.paymentId}</p>
+                    <p style="margin: 5px 0 0 0; font-size: 14px;"><strong>Applicants:</strong> ${count}</p>
+                  </div>
+
+                  <p><strong>What is next?</strong></p>
+                  <p>We are currently verifying your documentation and submitting your details for official authorization. You will receive your UK ETA via this email address as soon as it is issued.</p>
+                  
+                  <p>Typical processing time is <strong>24 to 72 hours</strong>. We will contact you if any additional information or clearer document copies are required.</p>
+
+                  <p style="margin-top: 40px; font-size: 12px; color: #a0aec0; border-top: 1px solid #edf2f7; padding-top: 20px;">
+                    &copy; 2025 UK EETA Online Services. This is an automated confirmation of your submission.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+    `;
+
+    // 1. Send to ADMIN (Using your original 'html' variable)
     await sendEmail({
       email: process.env.EMAIL_TO,
       subject: `🚨 NEW GROUP ORDER: ${count} Applicant(s) - ${data.paymentId}`,
       message: html,
     });
+
+    // 2. Send to USER (Using the new 'userHtml' variable)
+    if (primaryUserEmail) {
+        await sendEmail({
+          email: primaryUserEmail,
+          subject: `Thank You: Your UK ETA Application is being processed (${data.paymentId})`,
+          message: userHtml,
+        });
+    }
 
     res.status(200).json({ success: true });
   } catch (error) {
