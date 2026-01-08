@@ -1,4 +1,5 @@
 import cloudinary from '../config/cloudinary.js';
+import imagekit from '../config/imagekit.js';
 import sendEmail from '../utils/sendEmail.js';
 import multer from 'multer';
 
@@ -8,6 +9,7 @@ export const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } 
 }).any();
 
+// Upload to Cloudinary (for images)
 const uploadToCloudinary = (fileBuffer, folder) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -19,6 +21,33 @@ const uploadToCloudinary = (fileBuffer, folder) => {
     );
     uploadStream.end(fileBuffer);
   });
+};
+
+// Upload to ImageKit (for PDFs)
+const uploadToImageKit = (fileBuffer, fileName, folder) => {
+  return new Promise((resolve, reject) => {
+    imagekit.upload({
+      file: fileBuffer,
+      fileName: fileName,
+      folder: `uk_eta/${folder}`
+    }, (error, result) => {
+      if (error) reject(error);
+      else resolve(result.url);
+    });
+  });
+};
+
+// Smart file upload router based on file type
+const uploadFile = async (fileBuffer, fileName, folder) => {
+  const fileExtension = fileName.split('.').pop().toLowerCase();
+  
+  if (fileExtension === 'pdf') {
+    // Upload PDFs to ImageKit
+    return await uploadToImageKit(fileBuffer, fileName, folder);
+  } else {
+    // Upload images (jpeg, jpg, png, heic) to Cloudinary
+    return await uploadToCloudinary(fileBuffer, folder);
+  }
 };
 
 export const submitApplication = async (req, res) => {
@@ -38,51 +67,105 @@ export const submitApplication = async (req, res) => {
         let photoUrl = '#';
         let passportUrl = '#';
 
-        if (photoFile) photoUrl = await uploadToCloudinary(photoFile.buffer, 'photos');
-        if (passportFile) passportUrl = await uploadToCloudinary(passportFile.buffer, 'passports');
-
-        const risks = [];
-        if (data[`app_${i}_warCrimes`] === 'true') risks.push('War Crimes');
-        if (data[`app_${i}_terrorism`] === 'true') risks.push('Terrorism');
-        if (data[`app_${i}_extremism`] === 'true') risks.push('Extremism');
-
-        let extraNats = "None";
-        try {
-            const parsedNats = JSON.parse(data[`app_${i}_extraNationalities`] || "[]");
-            const filtered = parsedNats.filter(n => n && n.trim() !== "");
-            if (filtered.length > 0) extraNats = filtered.join(", ");
-        } catch (e) { extraNats = "None"; }
-
-        let criminalSummary = "No Convictions";
-        let hasCriminalRisk = false;
-
-        if (data[`app_${i}_hasCriminalConviction`] === 'yes') {
-            hasCriminalRisk = true;
-            let summaryParts = [];
-            if (data[`app_${i}_convictedLast12Months`] === 'yes') {
-                summaryParts.push(`<strong>⚠️ Conviction (Last 12 Months):</strong> ${data[`app_${i}_crimeDescription`]} (${data[`app_${i}_convictionCountry`]})`);
-            }
-            if (data[`app_${i}_sentencedOver12Months`] === 'yes') {
-                summaryParts.push(`<strong>⛓️ Prison Sentence (>12 Months):</strong> ${data[`app_${i}_prisonSentenceDetails`]} (${data[`app_${i}_prisonConvictionCountry`]})`);
-            }
-            criminalSummary = summaryParts.length > 0 ? summaryParts.join("<br/>") : "Conviction reported but no details.";
+        // Upload files using smart routing (PDF → ImageKit, Images → Cloudinary)
+        if (photoFile) {
+            photoUrl = await uploadFile(photoFile.buffer, photoFile.originalname, 'photos');
+        }
+        if (passportFile) {
+            passportUrl = await uploadFile(passportFile.buffer, passportFile.originalname, 'passports');
         }
 
-        applicantData.push({
-            fullName: data[`app_${i}_fullName`],
-            nationality: data[`app_${i}_nationality`],
-            extraNationalities: extraNats,
-            arrivalDate: data[`app_${i}_arrivalDate`],
-            contact: `${data[`app_${i}_email`]} / ${data[`app_${i}_phone`]}`,
-            address: `${data[`app_${i}_building`]}, ${data[`app_${i}_street`]}, ${data[`app_${i}_town`]}, ${data[`app_${i}_postal`]}`,
-            job: data[`app_${i}_hasJob`] === 'yes' ? data[`app_${i}_jobDetails`] : 'Unemployed/No Job',
-            criminal: criminalSummary,
-            hasCriminalRisk,
-            security: data[`app_${i}_securityRisk`] === 'yes' ? risks.join(', ') : 'Clean Record',
-            hasSecurityRisk: data[`app_${i}_securityRisk`] === 'yes',
-            photoUrl,
-            passportUrl
-        });
+        // For main applicant (index 0), collect all data
+        if (i === 0) {
+            const risks = [];
+            // Handle both boolean and string values, and treat 'false' string as false
+            const isWarCrimes = data[`app_${i}_warCrimes`] === true || data[`app_${i}_warCrimes`] === 'true';
+            const isTerrorism = data[`app_${i}_terrorism`] === true || data[`app_${i}_terrorism`] === 'true';
+            const isExtremism = data[`app_${i}_extremism`] === true || data[`app_${i}_extremism`] === 'true';
+            
+            if (isWarCrimes) risks.push('War Crimes');
+            if (isTerrorism) risks.push('Terrorism');
+            if (isExtremism) risks.push('Extremism');
+
+            // Build security summary
+            let securitySummary = "Clean Record";
+            let hasSecurityRisk = data[`app_${i}_securityRisk`] === 'yes';
+            
+            if (hasSecurityRisk && risks.length > 0) {
+                securitySummary = `<strong>🚨 Security Risks Identified:</strong><br/>${risks.join('<br/>')}`;
+            } else if (hasSecurityRisk) {
+                securitySummary = "Security risk reported but no specific details provided.";
+            }
+
+            let extraNats = "None";
+            try {
+                const parsedNats = JSON.parse(data[`app_${i}_extraNationalities`] || "[]");
+                const filtered = parsedNats.filter(n => n && n.trim() !== "");
+                if (filtered.length > 0) extraNats = filtered.join(", ");
+            } catch (e) { extraNats = "None"; }
+
+            let criminalSummary = "No Convictions";
+            let hasCriminalRisk = false;
+
+            if (data[`app_${i}_hasCriminalConviction`] === 'yes') {
+                hasCriminalRisk = true;
+                let summaryParts = [];
+                if (data[`app_${i}_convictedLast12Months`] === 'yes') {
+                    summaryParts.push(`<strong>⚠️ Conviction (Last 12 Months):</strong> ${data[`app_${i}_crimeDescription`]} (${data[`app_${i}_convictionCountry`]})`);
+                }
+                if (data[`app_${i}_sentencedOver12Months`] === 'yes') {
+                    summaryParts.push(`<strong>⛓️ Prison Sentence (>12 Months):</strong> ${data[`app_${i}_prisonSentenceDetails`]} (${data[`app_${i}_prisonConvictionCountry`]})`);
+                }
+                criminalSummary = summaryParts.length > 0 ? summaryParts.join("<br/>") : "Conviction reported but no details.";
+            }
+
+            // Build full address for main applicant
+            const addressParts = [
+                data[`app_${i}_building`],
+                data[`app_${i}_apartment`],
+                data[`app_${i}_street`],
+                data[`app_${i}_area`],
+                data[`app_${i}_town`],
+                data[`app_${i}_postal`],
+                data[`app_${i}_country`],
+                data[`app_${i}_additionalAddress`]
+            ].filter(part => part && part.trim() !== '');
+
+            applicantData.push({
+                fullName: data[`app_${i}_fullName`] || 'Main Applicant',
+                nationality: data[`app_${i}_nationality`] || 'Not specified',
+                extraNationalities: extraNats,
+                arrivalDate: data[`app_${i}_arrivalDate`] || 'Not specified',
+                contact: `${data[`app_${i}_email`] || 'No email'} / ${data[`app_${i}_phone`] || 'No phone'}`,
+                address: addressParts.length > 0 ? addressParts.join(', ') : 'Address not provided',
+                job: data[`app_${i}_hasJob`] === 'yes' ? data[`app_${i}_jobDetails`] : 'Unemployed/No Job',
+                criminal: criminalSummary,
+                hasCriminalRisk,
+                security: securitySummary,
+                hasSecurityRisk: hasSecurityRisk,
+                photoUrl,
+                passportUrl,
+                isMainApplicant: true
+            });
+        } else {
+            // For additional applicants, only store basic info and files
+            applicantData.push({
+                fullName: `Additional Applicant #${i}`,
+                nationality: 'Same as main applicant',
+                extraNationalities: 'Same as main applicant',
+                arrivalDate: 'Same as main applicant',
+                contact: 'Same as main applicant',
+                address: 'Same as main applicant',
+                job: 'Same as main applicant',
+                criminal: 'Same as main applicant',
+                hasCriminalRisk: false,
+                security: 'Same as main applicant',
+                hasSecurityRisk: false,
+                photoUrl,
+                passportUrl,
+                isMainApplicant: false
+            });
+        }
     }
 
     // --- FULLY COMPATIBLE HTML TEMPLATE (ADMIN SIDE - UNCHANGED) ---
@@ -153,12 +236,14 @@ export const submitApplication = async (req, res) => {
     `;
 
     applicantData.forEach((app, idx) => {
+        const applicantTitle = app.isMainApplicant ? 'MAIN APPLICANT' : `ADDITIONAL APPLICANT #${idx}`;
+        
         html += `
           <!-- Applicant Header Bar -->
           <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 0;">
             <tr>
-              <td bgcolor="#002d85" style="padding: 12px 20px; font-family: Arial, sans-serif; color: #ffffff; font-weight: bold; font-size: 14px;">
-                APPLICANT #${idx + 1}: ${app.fullName.toUpperCase()}
+              <td bgcolor="${app.isMainApplicant ? '#002d85' : '#4a5568'}" style="padding: 12px 20px; font-family: Arial, sans-serif; color: #ffffff; font-weight: bold; font-size: 14px;">
+                ${applicantTitle}: ${app.fullName.toUpperCase()}
               </td>
             </tr>
           </table>
@@ -168,7 +253,11 @@ export const submitApplication = async (req, res) => {
             <tr>
               <td style="padding: 20px; font-family: Arial, sans-serif; font-size: 14px; color: #2d3748;">
                 
-                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">`;
+
+        // Show full details only for main applicant
+        if (app.isMainApplicant) {
+            html += `
                   <tr>
                     <td width="120" style="color: #718096; padding-bottom: 8px;">Nationality:</td>
                     <td style="font-weight: bold; padding-bottom: 8px;">${app.nationality}</td>
@@ -184,6 +273,10 @@ export const submitApplication = async (req, res) => {
                   <tr>
                     <td style="color: #718096; padding-bottom: 8px;">Contact Info:</td>
                     <td style="padding-bottom: 8px;">${app.contact}</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #718096; padding-bottom: 8px;">Address:</td>
+                    <td style="padding-bottom: 8px;">${app.address}</td>
                   </tr>
                   <tr>
                     <td style="color: #718096; padding-bottom: 8px;">Employment:</td>
@@ -210,7 +303,7 @@ export const submitApplication = async (req, res) => {
                   <tr>
                     <td colspan="2" style="padding-top: 10px;">
                       <table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#fff5f5" style="border-left: 4px solid #c53030;">
-                        <tr><td style="font-size: 13px; color: #c53030; font-family: Arial;">${app.criminal}</td></tr>
+                        <tr><td style="font-size: 13px; color: #c53030; font-family: Arial;"><strong>Criminal Details:</strong><br/>${app.criminal}</td></tr>
                       </table>
                     </td>
                   </tr>` : ''}
@@ -230,6 +323,29 @@ export const submitApplication = async (req, res) => {
                       <![endif]>
                     </td>
                   </tr>
+                  ${app.hasSecurityRisk ? `
+                  <tr>
+                    <td colspan="2" style="padding-top: 10px;">
+                      <table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#fff5f5" style="border-left: 4px solid #c53030;">
+                        <tr><td style="font-size: 13px; color: #c53030; font-family: Arial;"><strong>Security Risks:</strong><br/>${app.security}</td></tr>
+                      </table>
+                    </td>
+                  </tr>` : ''}
+
+                  <tr>
+                   
+                   
+                  </tr>`;
+        } else {
+            html += `
+                  <tr>
+                    <td colspan="2" style="padding: 15px; background-color: #f8fafc; border-radius: 5px; color: #4a5568; font-style: italic;">
+                      📋 Additional applicant - Details shared with main applicant. Only documents provided separately.
+                    </td>
+                  </tr>`;
+        }
+
+        html += `
                 </table>
 
                 <!-- Bulletproof Buttons -->
@@ -277,7 +393,7 @@ export const submitApplication = async (req, res) => {
               <tr>
                 <td align="center" bgcolor="#f7fafc" style="padding: 30px; border-top: 1px solid #edf2f7;">
                   <p style="margin: 0; font-family: Arial, sans-serif; font-size: 12px; color: #718096;">
-                    &copy; 2025 UK EETA Online Services. Automated Portal Notification.
+                    &copy; 2026 UK EETA Online Services. Automated Portal Notification.
                   </p>
                 </td>
               </tr>
@@ -320,7 +436,7 @@ export const submitApplication = async (req, res) => {
                   <p>Typical processing time is <strong>24 to 72 hours</strong>. We will contact you if any additional information or clearer document copies are required.</p>
 
                   <p style="margin-top: 40px; font-size: 12px; color: #a0aec0; border-top: 1px solid #edf2f7; padding-top: 20px;">
-                    &copy; 2025 UK EETA Online Services. This is an automated confirmation of your submission.
+                    &copy; 2026 UK EETA Online Services. This is an automated confirmation of your submission.
                   </p>
                 </td>
               </tr>
@@ -332,23 +448,34 @@ export const submitApplication = async (req, res) => {
     </html>
     `;
 
-    // 1. Send to ADMIN (Using your original 'html' variable)
-    await sendEmail({
-      email: process.env.EMAIL_TO,
-      subject: `🚨 NEW GROUP ORDER: ${count} Applicant(s) - ${data.paymentId}`,
-      message: html,
+    // Send response immediately to frontend
+    res.status(200).json({ success: true, transactionId: data.paymentId });
+
+    // Send emails asynchronously (don't block the response)
+    setImmediate(async () => {
+      try {
+        // 1. Send to ADMIN (Using your original 'html' variable)
+        await sendEmail({
+          email: process.env.EMAIL_TO,
+          subject: `🚨 NEW GROUP ORDER: ${count} Applicant(s) - ${data.paymentId}`,
+          message: html,
+        });
+
+        // 2. Send to USER (Using the new 'userHtml' variable)
+        if (primaryUserEmail) {
+            await sendEmail({
+              email: primaryUserEmail,
+              subject: `Thank You: Your UK ETA Application is being processed (${data.paymentId})`,
+              message: userHtml,
+            });
+        }
+        
+        console.log(`✅ Emails sent successfully for transaction: ${data.paymentId}`);
+      } catch (emailError) {
+        console.error(`❌ Email sending failed for transaction ${data.paymentId}:`, emailError);
+      }
     });
 
-    // 2. Send to USER (Using the new 'userHtml' variable)
-    if (primaryUserEmail) {
-        await sendEmail({
-          email: primaryUserEmail,
-          subject: `Thank You: Your UK ETA Application is being processed (${data.paymentId})`,
-          message: userHtml,
-        });
-    }
-
-    res.status(200).json({ success: true });
   } catch (error) {
     console.error("Backend Error:", error);
     res.status(500).json({ success: false, message: error.message });
