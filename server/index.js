@@ -16,7 +16,7 @@ app.use('/api/applications', applicationRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
-  res.send('UK ETA Email Service is Running');
+  res.send('UK EETA Email Service is Running');
 });
 
 const PORT = process.env.PORT || 5000;

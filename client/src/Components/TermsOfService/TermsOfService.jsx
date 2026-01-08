@@ -7,7 +7,7 @@ const TermsOfService = () => {
       title: "Role & Scope",
       content: (
         <>
-          <p className="mb-2">EETA UK provides optional, fee-based support for travelers applying for the UK ETA. We assist with review, guidance, and processing.</p>
+          <p className="mb-2">EETA UK provides optional, fee-based support for travelers applying for the UK EETA. We assist with review, guidance, and processing.</p>
           <p>We are a third-party provider, not affiliated with the UK government. You may apply directly at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a> without our fees.</p>
         </>
       )
@@ -90,7 +90,7 @@ const TermsOfService = () => {
         {/* INTRO TEXT */}
         <div className="mb-16 max-w-3xl">
           <p className="text-lg text-gray-600 leading-relaxed">
-            Welcome to <span className="text-black font-semibold">eeta.uk</span>. By accessing our platform, you accept these terms. We provide optional assistance for UK ETA applications.
+            Welcome to <span className="text-black font-semibold">eeta.uk</span>. By accessing our platform, you accept these terms. We provide optional assistance for UK EETA applications.
           </p>
         </div>
 

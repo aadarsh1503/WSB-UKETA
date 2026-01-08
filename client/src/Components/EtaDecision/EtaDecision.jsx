@@ -20,7 +20,7 @@ const EtaDecision = () => {
               Processing Time
             </h3>
             <p className="text-gray-800 text-lg leading-relaxed mb-8">
-              Most applicants receive a decision notification within <span className="font-bold">3 days</span> of submitting their UK ETA application.
+              Most applicants receive a decision notification within <span className="font-bold">3 days</span> of submitting their UK EETA application.
             </p>
             <a href='/apply'>
             <button className="bg-gray-950 cursor-pointer text-white px-10 py-4 rounded-full font-medium tracking-wide hover:bg-gray-800 transition-colors duration-200">

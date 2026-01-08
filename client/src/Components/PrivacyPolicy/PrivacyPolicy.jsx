@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
       content: (
         <>
           <p className="mb-2">EETA UK is a Canadian company based at 51 Lorridge St, Richmond Hill, ON, L4E 3W5 (OCN: 2396200).</p>
-          <p>We provide optional, third-party assistance for UK ETA applications. We are not affiliated with the UK government.</p>
+          <p>We provide optional, third-party assistance for UK EETA applications. We are not affiliated with the UK government.</p>
         </>
       )
     },
@@ -29,7 +29,7 @@ const PrivacyPolicy = () => {
     },
     {
       title: "How We Use It",
-      content: "We use data to process your UK ETA application, communicate status, provide support, and meet legal requirements. Processing is based on legitimate interest, contractual necessity, or consent."
+      content: "We use data to process your UK EETA application, communicate status, provide support, and meet legal requirements. Processing is based on legitimate interest, contractual necessity, or consent."
     },
     {
       title: "Data Sharing",

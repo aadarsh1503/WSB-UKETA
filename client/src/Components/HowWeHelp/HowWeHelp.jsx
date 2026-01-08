@@ -18,7 +18,7 @@ const HowWeHelp = () => {
       number: "3",
       title: "Receive Your ETA",
       subtitle: "PROCESSING TIME WITHIN 3 DAYS",
-      description: "After the payment is processed and the application is reviewed, you will receive your UK ETA decision via email. Ensure to check your inbox regularly for updates and notifications regarding your application status."
+      description: "After the payment is processed and the application is reviewed, you will receive your UK EETA decision via email. Ensure to check your inbox regularly for updates and notifications regarding your application status."
     }
   ];
 

@@ -10,7 +10,7 @@ const ReadyToApply = () => {
         {/* Heading */}
         <h2 className="text-5xl lg:text-7xl text-gray-900 tracking-tight leading-[1.1] mb-8">
           Ready to Apply for <br />
-          Your UK ETA?
+          Your UK EETA?
         </h2>
 
         {/* Subtitle */}

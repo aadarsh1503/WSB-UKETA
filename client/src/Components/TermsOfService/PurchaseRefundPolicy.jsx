@@ -7,7 +7,7 @@ const PurchaseRefundPolicy = () => {
       title: "Service Overview",
       content: (
         <>
-          <p className="mb-2">EETA UK provides optional, paid support for UK ETA applications. Our service includes human-reviewed document checks, submission support, and guidance.</p>
+          <p className="mb-2">EETA UK provides optional, paid support for UK EETA applications. Our service includes human-reviewed document checks, submission support, and guidance.</p>
           <p>We are not affiliated with the UK government. You may apply independently at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a>. This is a personalized digital support service.</p>
         </>
       )

@@ -12,7 +12,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: `"UK ETA System" <${process.env.EMAIL_FROM}>`,
+    from: `"UK EETA System" <${process.env.EMAIL_FROM}>`,
     to: options.email,
     subject: options.subject,
     html: options.message,

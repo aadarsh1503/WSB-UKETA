@@ -21,13 +21,13 @@ const EtaRequirements = () => {
       title: "Payment Method",
       // Updated the icon usage here
       icon: <FaSterlingSign />,
-      description: "Applicants need a valid payment method, such as a credit or debit card, to pay the processing fee for the UK ETA application."
+      description: "Applicants need a valid payment method, such as a credit or debit card, to pay the processing fee for the UK EETA application."
     },
     {
       id: 4,
       title: "Email address",
       icon: <FaAddressCard />,
-      description: "A valid email address is essential for receiving updates, notifications, and the final decision on the UK ETA application."
+      description: "A valid email address is essential for receiving updates, notifications, and the final decision on the UK EETA application."
     }
   ];
 

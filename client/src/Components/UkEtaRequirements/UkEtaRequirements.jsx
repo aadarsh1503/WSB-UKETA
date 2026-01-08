@@ -132,7 +132,7 @@ const UkEtaRequirements = () => {
           
           {/* Heading */}
           <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-8">
-            Who Needs a UK ETA
+            Who Needs a UK EETA
           </h2>
 
           {/* Intro Text */}
