@@ -94,7 +94,7 @@ const SexyCountrySelect = ({ value, onChange, placeholder = "Select Country", co
     );
 };
 
-const FileUploadField = ({ label, instructions, exampleImg, id, file, setFile }) => {
+const FileUploadField = ({ label, instructions, exampleImg, id, file, setFile, showMultipleExamples = false }) => {
     const [preview, setPreview] = useState(null);
     const [isPdf, setIsPdf] = useState(false);
     
@@ -159,8 +159,15 @@ const FileUploadField = ({ label, instructions, exampleImg, id, file, setFile })
                 <p className="p-4 bg-gray-50 rounded-2xl text-[11px] text-gray-500 italic whitespace-pre-line">{instructions}</p>
             </div>
             <div className="space-y-4">
-                <p className="text-sm font-bold text-gray-800">Example</p>
-                <img src={exampleImg} alt="Example" className="w-full max-w-[200px] rounded-2xl border-2 border-gray-100 grayscale-[0.3]" />
+                <p className="text-sm font-bold text-gray-800">{showMultipleExamples ? 'Examples' : 'Example'}</p>
+                {showMultipleExamples ? (
+                    <div className="grid grid-cols-2 gap-3">
+                        <img src={exampleImg} alt="Example 1" className="w-full rounded-2xl border-2 border-gray-100 grayscale-[0.3]" />
+                        <img src="https://res.cloudinary.com/dhxzk7pgp/image/upload/v1767877316/examples_pj2wlj.webp" alt="Example 2" className="w-32 h-96 rounded-2xl border-2 border-gray-100 grayscale-[0.3]" />
+                    </div>
+                ) : (
+                    <img src={exampleImg} alt="Example" className="w-full max-w-[200px] rounded-2xl border-2 border-gray-100 grayscale-[0.3]" />
+                )}
             </div>
         </div>
     );
@@ -559,7 +566,7 @@ in colour, horizontal (landscape)
 all 4 corners of the personal details page must be visible
 clear and in focus, without glare or reflections
 JPEG, HEIC, PNG or PDF, 5MB max`}
-                                            exampleImg="https://uketa.com/wp-content/themes/guide/guide_custom_form/imgs/passport.webp"
+                                            exampleImg="https://res.cloudinary.com/dhxzk7pgp/image/upload/v1767877181/passport_xoywse.webp"
                                         />
 
                                         <section>
@@ -598,7 +605,8 @@ your head, shoulders and upper body must be visible
 in colour, recently taken (no more than 3 months old)
 vertical (portrait)
 with a neutral facial expression`}
-                                                exampleImg="https://uketa.com/wp-content/themes/guide/guide_custom_form/imgs/photo.webp" 
+                                                exampleImg="https://res.cloudinary.com/dhxzk7pgp/image/upload/v1767877181/photo_knna2a.webp"
+                                                showMultipleExamples={true}
                                             />
                                         </section>
 
@@ -809,7 +817,8 @@ your head, shoulders and upper body must be visible
 in colour, recently taken (no more than 3 months old)
 vertical (portrait)
 with a neutral facial expression`}
-                                            exampleImg="https://uketa.com/wp-content/themes/guide/guide_custom_form/imgs/photo.webp" 
+                                            exampleImg="https://uketa.com/wp-content/themes/guide/guide_custom_form/imgs/photo.webp"
+                                            showMultipleExamples={true}
                                         />
                                     </div>
                                 )}
