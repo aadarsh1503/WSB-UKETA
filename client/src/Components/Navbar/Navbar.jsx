@@ -51,26 +51,20 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-full w-full">
           
           {/* LOGO & BRAND TEXT SECTION */}
-          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 z-[110] group">
+          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 z-[110] group">
             <img 
               src="LOGO1.png" 
               alt="Logo" 
-              className={`transition-all duration-300 object-contain ${isScrolled ? 'h-12' : 'h-16'}`} 
+              className={`transition-all duration-300 object-contain ${isScrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'}`} 
             />
             
-            {/* TEXT BRANDING */}
-            <div className="flex flex-col border-l border-gray-300 pl-3 py-1">
-              <div className="flex flex-col leading-none">
-                <span className="text-[13px] md:text-[15px] font-black tracking-tighter text-gray-900 uppercase italic">
-                  United Kingdom
+            {/* SEXY SINGLE ROW BRANDING */}
+            <div className="hidden sm:flex items-center whitespace-nowrap">
+              <span className="text-[11px] md:text-[14px] font-black tracking-tighter text-gray-900 uppercase italic leading-none">
+                United Kingdom online E-Visa 
+                <span className="ml-2 font-bold opacity-70 not-italic hidden md:inline">
+                  ( Electronic Travel Authorisation ETA )
                 </span>
-                <span className="text-[10px] md:text-[11px] font-bold text-blue-700 tracking-[0.1em] uppercase mt-0.5">
-                  Online E-Visa
-                </span>
-              </div>
-              {/* ETA Description - Hidden on small mobile to save space */}
-              <span className="hidden sm:block text-[8px] md:text-[9px] text-gray-400 font-medium tracking-wide mt-1 uppercase">
-                Electronic Travel Authorisation (ETA)
               </span>
             </div>
           </Link>
@@ -119,13 +113,21 @@ const Navbar = () => {
       <div className={`fixed inset-0 bg-white z-[90] lg:hidden transition-transform duration-500 ease-in-out pt-32
         ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        {/* ... Rest of your mobile menu code ... */}
+         <div className="flex flex-col items-center gap-6 py-10">
+          <MobileLink to="/" label="HOME" onClick={toggleMobileMenu} />
+          <MobileLink to="/apply" label="APPLY NOW" onClick={toggleMobileMenu} />
+          <MobileLink to="/about" label="ABOUT US" onClick={toggleMobileMenu} />
+          <MobileLink to="/contact-us" label="CONTACT" onClick={toggleMobileMenu} />
+          <div className="w-2/3 border-t border-gray-100 mt-6 pt-8 flex flex-col items-center gap-5">
+            <MobileLink to="/terms-of-Service" label="Terms of Service" onClick={toggleMobileMenu} isSmall />
+            <MobileLink to="/privacy-policy" label="Privacy Policy" onClick={toggleMobileMenu} isSmall />
+          </div>
+        </div>
       </div>
     </>
   );
 };
 
-// Helper Components (Keeping your original logic but refining styles)
 const NavLink = ({ to, label, isActive }) => (
   <Link 
     to={to} 
@@ -140,6 +142,16 @@ const DropdownItem = ({ to, label }) => (
   <Link 
     to={to} 
     className="px-6 py-3 text-[10px] font-bold text-gray-500 hover:text-black hover:bg-gray-50 uppercase tracking-widest transition-colors"
+  >
+    {label}
+  </Link>
+);
+
+const MobileLink = ({ to, label, onClick, isSmall }) => (
+  <Link 
+    to={to} 
+    onClick={onClick}
+    className={`transition-colors duration-300 text-xs font-bold text-gray-500 hover:text-black tracking-widest uppercase ${isSmall ? 'text-[10px]' : ''}`}
   >
     {label}
   </Link>
