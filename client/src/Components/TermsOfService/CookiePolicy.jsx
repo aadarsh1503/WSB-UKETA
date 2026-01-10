@@ -162,13 +162,13 @@ const CookiePolicy = () => {
         <div className="mt-16 pt-8 border-t-2 border-black flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h4 className="font-bold text-lg">Data Privacy Concerns?</h4>
-            <p className="text-sm text-gray-500">51 Lorridge St, Richmond Hill, ON</p>
+            <p className="text-sm text-gray-500">Kingdom of Saudi Arabia</p>
           </div>
           <div className="flex flex-col md:items-end">
             <a href="mailto:info@eeta.uk" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
               info@eeta.uk
             </a>
-            <span className="font-mono text-sm px-2">613-454-5636</span>
+            <span className="font-mono text-sm px-2">+966554026599</span>
           </div>
         </div>
 

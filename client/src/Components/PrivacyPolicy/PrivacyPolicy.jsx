@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">EETA UK is a Saudi Arabia company based at King Khalid Str., Dammam, Kingdom of Saudi Arabia (CR NO.: 2053122409).</p>
+          <p className="mb-2">EETA UK is a Saudi Arabia company based at King Khalid Str., Dammam, Kingdom of Saudi Arabia (CR NO : 2053122409).</p>
           <p>We provide optional, third-party assistance for UK EETA applications. We are not affiliated with the UK government.</p>
         </>
       )
@@ -69,7 +69,7 @@ const PrivacyPolicy = () => {
       content: (
         <>
           <p className="mb-2">We use cookies to improve functionality. Non-essential cookies require consent. We may use Google Analytics for anonymized usage patterns.</p>
-          <p className="text-xs text-gray-500">See our <span className="text-black font-medium underline">Cookie Policy</span> for details.</p>
+          <p className="text-xs text-gray-500">See our <a href='/cookies'><span className="text-black font-medium underline">Cookie Policy</span></a> for details.</p>
         </>
       )
     },
@@ -96,7 +96,7 @@ const PrivacyPolicy = () => {
           </div>
           <div className="text-right mt-6 md:mt-0">
              <p className="text-sm font-bold">EETA UK</p>
-             <p className="text-xs text-gray-500">OCN: 2396200</p>
+             <p className="text-xs text-gray-500"> CR NO: 2053122409</p>
           </div>
         </div>
 
@@ -143,13 +143,13 @@ const PrivacyPolicy = () => {
         <div className="mt-16 pt-8 border-t-2 border-black flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h4 className="font-bold text-lg">Privacy Concerns?</h4>
-            <p className="text-sm text-gray-500">51 Lorridge St, Richmond Hill, ON</p>
+            <p className="text-sm text-gray-500">Kingdom of Saudi Arabia</p>
           </div>
           <div className="flex flex-col md:items-end">
             <a href="mailto:info@eeta.uk" className="font-mono text-sm hover:bg-black hover:text-white px-2 py-1 transition-colors -mr-2">
               info@eeta.uk
             </a>
-            <span className="font-mono text-sm px-2">613-454-5636</span>
+            <span className="font-mono text-sm px-2">+966554026599</span>
           </div>
         </div>
 
