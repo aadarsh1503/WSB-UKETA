@@ -494,18 +494,18 @@ const UKETAApplication = () => {
                     }
                 `}</style>
 
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-5xl mt-10 mx-auto">
                     <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white mb-10">
                         
-                        <div className="p-12 md:p-20 border-b border-gray-100 bg-gradient-to-b from-white to-gray-50/50">
+                        {/* <div className="p-12 md:p-20 border-b border-gray-100 bg-gradient-to-b from-white to-gray-50/50">
                             <h1 className="text-5xl md:text-6xl font-black text-[#002d85] tracking-tighter mb-4 uppercase">UK EETA Group Application</h1>
-                        </div>
+                        </div> */}
 
                         {applicants.map((app, index) => (
                             <div key={app.id} id={`applicant-section-${app.id}`} className={`p-12 md:p-20 space-y-20 ${index !== 0 ? 'border-t-8 border-gray-50' : ''}`}>
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-3xl font-black text-[#002d85] uppercase">
-                                        {index === 0 ? 'Main Applicant' : `Additional Applicant #${index}`}
+                                        {index === 0 ? 'Applicant Form' : `Additional Applicant #${index}`}
                                     </h2>
                                     {applicants.length > 1 && (
                                         <button onClick={() => removeApplicant(app.id)} className="text-red-500 p-4 hover:bg-red-50 rounded-2xl transition-all"><FaTrash /></button>
