@@ -59,14 +59,14 @@ const Navbar = () => {
             />
             
             {/* SINGLE ROW BRANDING */}
-            <div className="hidden sm:flex items-center whitespace-nowrap">
-              <span className="text-[11px] md:text-[14px] font-black tracking-tighter text-gray-900 uppercase italic leading-none">
-                United Kingdom online E-Visa 
-                <span className="ml-2 font-bold opacity-70 not-italic hidden md:inline">
-                  ( Electronic Travel Authorisation ETA )
-                </span>
-              </span>
-            </div>
+            <div className="sm:flex items-center"> 
+  <span className="text-[11px] md:text-[14px] font-black tracking-tighter text-gray-900 uppercase italic leading-tight md:leading-none">
+    United Kingdom online E-Visa 
+    <span className="block md:inline md:ml-2 font-bold opacity-70 not-italic">
+      ( Electronic Travel Authorisation ETA )
+    </span>
+  </span>
+</div>
           </Link>
 
           {/* DESKTOP LINKS */}
