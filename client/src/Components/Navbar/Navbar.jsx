@@ -58,7 +58,7 @@ const Navbar = () => {
               className={`transition-all duration-300 object-contain ${isScrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'}`} 
             />
             
-            {/* SEXY SINGLE ROW BRANDING */}
+            {/* SINGLE ROW BRANDING */}
             <div className="hidden sm:flex items-center whitespace-nowrap">
               <span className="text-[11px] md:text-[14px] font-black tracking-tighter text-gray-900 uppercase italic leading-none">
                 United Kingdom online E-Visa 
@@ -113,14 +113,21 @@ const Navbar = () => {
       <div className={`fixed inset-0 bg-white z-[90] lg:hidden transition-transform duration-500 ease-in-out pt-32
         ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-         <div className="flex flex-col items-center gap-6 py-10">
+                <div className="flex flex-col items-center gap-6 py-10">
+          {/* Primary Mobile Links */}
           <MobileLink to="/" label="HOME" onClick={toggleMobileMenu} />
           <MobileLink to="/apply" label="APPLY NOW" onClick={toggleMobileMenu} />
           <MobileLink to="/about" label="ABOUT US" onClick={toggleMobileMenu} />
           <MobileLink to="/contact-us" label="CONTACT" onClick={toggleMobileMenu} />
+          
+          {/* Policy Section */}
           <div className="w-2/3 border-t border-gray-100 mt-6 pt-8 flex flex-col items-center gap-5">
+            <span className="text-[10px] text-gray-400 font-bold tracking-[0.3em] uppercase mb-2">Legal Policies</span>
             <MobileLink to="/terms-of-Service" label="Terms of Service" onClick={toggleMobileMenu} isSmall />
+            <MobileLink to="/purchase-Refund" label="Purchase Policy" onClick={toggleMobileMenu} isSmall />
+            <MobileLink to="/cookies" label="Cookie Policy" onClick={toggleMobileMenu} isSmall />
             <MobileLink to="/privacy-policy" label="Privacy Policy" onClick={toggleMobileMenu} isSmall />
+            <MobileLink to="/disclaimer" label="Disclaimer" onClick={toggleMobileMenu} isSmall />
           </div>
         </div>
       </div>

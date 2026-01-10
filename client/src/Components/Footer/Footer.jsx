@@ -117,7 +117,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-3">
              <div className="hidden md:block h-px w-12 bg-gray-300" />
-             <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest italic">Official Support Channel</span>
+             {/* <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest italic">Official Support Channel</span> */}
           </div>
         </div>
       </div>
