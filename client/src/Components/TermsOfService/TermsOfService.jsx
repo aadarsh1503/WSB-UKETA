@@ -58,7 +58,7 @@ const TermsOfService = () => {
     },
     {
       title: "Governing Law",
-      content: "Governed by the laws of Ontario and Canada. Disputes are subject to the exclusive jurisdiction of the courts of Toronto, Ontario."
+      content: "Governed by the laws of Saudi Arabia . Disputes are subject to the exclusive jurisdiction of the courts of Toronto, Ontario."
     },
     {
       title: "Updates",
