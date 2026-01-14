@@ -77,12 +77,12 @@ const AboutUs = () => {
             </div>
 
             {/* Item 3 */}
-            <div className="flex items-start gap-5">
+            {/* <div className="flex items-start gap-5">
               <FaCheck className="mt-1.5 text-black flex-shrink-0" size={20} strokeWidth={2} />
               <p className="text-lg lg:text-xl text-gray-900 leading-snug">
                 Full refund if your ETA application is denied—no questions asked
               </p>
-            </div>
+            </div> */}
 
           </div>
 

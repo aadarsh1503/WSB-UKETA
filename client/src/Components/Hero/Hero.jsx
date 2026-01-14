@@ -19,7 +19,7 @@ const Hero = () => {
           </h2>
           
           <p className="text-gray-700 text-lg max-w-md mb-10 leading-relaxed">
-            Your guide to understanding the Bahrain Electronic Travel Authorization (ETA) requirements and completing your application accurately and efficiently.
+          Your guide to understanding the  Electronic Travel Authorization (ETA) requirements and completing your application accurately and efficiently
           </p>
 
           <div>

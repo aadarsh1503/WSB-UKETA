@@ -8,7 +8,7 @@ const TermsOfService = () => {
       content: (
         <>
           <p className="mb-2">EETA UK provides optional, fee-based support for travelers applying for the UK EETA. We assist with review, guidance, and processing.</p>
-          <p>We are a third-party provider, not affiliated with the UK government. You may apply directly at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a> without our fees.</p>
+          {/* <p>We are a third-party provider, not affiliated with the UK government. You may apply directly at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a> without our fees.</p> */}
         </>
       )
     },

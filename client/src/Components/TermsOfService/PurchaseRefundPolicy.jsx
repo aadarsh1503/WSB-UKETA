@@ -144,7 +144,7 @@ const PurchaseRefundPolicy = () => {
         {/* COMPACT FOOTER */}
         <div className="mt-16 pt-8 border-t-2 border-black flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h4 className="font-bold text-lg">Questions or Concerns?</h4>
+            {/* <h4 className="font-bold text-lg">Full refund available if cancelled before submission. Once submitted, all charges are final ( write instead: fees & charges are non-refundable in case of E-Visa and/or ETA refused. ).      Governed by the laws of Saudi Arabia . Disputes are subject to the exclusive jurisdiction of the courts of Toronto, Ontario. ( write courts of Saudi Arabia not Toronto, Ontario )Questions or Concerns?</h4> */}
             <p className="text-sm text-gray-500">Kingdom of Saudi Arabia</p>
           </div>
           <div className="flex flex-col md:items-end">
