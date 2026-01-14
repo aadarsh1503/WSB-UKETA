@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react"; // 1. Added useEffect
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"; // 2. Added useLocation
 import "./App.css";
 
 // Components Imports
@@ -13,20 +14,27 @@ import CookiePolicy from "./Components/TermsOfService/CookiePolicy";
 import PrivacyPolicy from "./Components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./Components/TermsOfService/Disclaimer";
 import Navbar from "./Components/Navbar/Navbar";
+import EmailWidget from "./Components/EmailWidget/EmailWidget";
 
-// Import ScrollToTop & EmailWidget
-import ScrollToTop from "./Components/ScrollToTop"; 
-import EmailWidget from "./Components/EmailWidget/EmailWidget"; // <--- IMPORT HERE
+// 3. This small internal component handles the scroll logic
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   return (
     <Router>
-     
+      {/* 4. Use the internal ScrollToTop here */}
       <ScrollToTop />
       
       <Navbar />
       
-      {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/apply" element={<EtaApplicationForm />} />
@@ -39,7 +47,6 @@ function App() {
         <Route path="/disclaimer" element={<Disclaimer />} />
       </Routes>
 
-      {/* Place the Widget here so it sits on top of everything */}
       <EmailWidget /> 
 
       <Footer />

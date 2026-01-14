@@ -3,6 +3,17 @@ import { FaPhone, FaEnvelope, FaGlobe, FaLocationDot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  // Define links based on App.jsx routes
+  const quickLinks = [
+    { label: 'Terms of Service', path: '/terms-of-Service' },
+    { label: 'Refund Policy', path: '/purchase-Refund' },
+    { label: 'Cookies', path: '/cookies' },
+    { label: 'Privacy Policy', path: '/privacy-policy' },
+    { label: 'Disclaimer', path: '/disclaimer' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Contact', path: '/contact-us' },
+  ];
+
   return (
     <footer className="w-full bg-[#eff4f8] text-gray-800 font-sans pt-16 pb-10 px-6 lg:px-12 relative overflow-hidden">
       {/* Decorative element */}
@@ -82,15 +93,15 @@ const Footer = () => {
 
             {/* QUICK LINKS PILLS */}
             <div className="space-y-3">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-700">Quick Links</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-700">Navigation</h4>
               <div className="flex flex-wrap gap-2">
-                {['Terms', 'Refunds', 'Cookies', 'Privacy', 'Disclaimer'].map((name) => (
+                {quickLinks.map((link) => (
                   <Link 
-                    key={name}
-                    to={`/${name.toLowerCase()}`} 
+                    key={link.path}
+                    to={link.path} 
                     className="px-3 py-1.5 bg-white/40 hover:bg-black hover:text-white border border-gray-200 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all"
                   >
-                    {name}
+                    {link.label}
                   </Link>
                 ))}
               </div>
@@ -117,7 +128,6 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-3">
              <div className="hidden md:block h-px w-12 bg-gray-300" />
-             {/* <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest italic">Official Support Channel</span> */}
           </div>
         </div>
       </div>
