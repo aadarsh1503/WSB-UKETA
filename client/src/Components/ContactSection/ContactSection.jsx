@@ -88,7 +88,7 @@ const ContactSection = () => {
                 Company
               </h4>
               <p className="text-xl md:text-2xl font-medium text-black">
-                EETA UK
+              EETA.UK is owned and operated by World Services Bureau ( WSB )
               </p>
             </div>
 
@@ -101,7 +101,7 @@ const ContactSection = () => {
                 Address
               </h4>
               <p className="text-xl md:text-2xl font-medium text-black leading-snug max-w-xs">
-                King Khalid Str., Dammam, Kingdom of Saudi Arabia
+                Kingdom of Saudi Arabia
               </p>
             </div>
 

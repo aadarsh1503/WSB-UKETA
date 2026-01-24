@@ -115,7 +115,7 @@ const Footer = () => {
             <div className="absolute top-0 left-0 w-1 h-full bg-blue-700" />
             <p className="text-[13px] leading-relaxed text-gray-600 max-w-6xl">
               This website is operated by <span className="font-extrabold text-black uppercase tracking-tighter">World Services Bureau ( WSB )</span>, 
-              an independent travel support company based in <span className="font-bold text-black uppercase tracking-tighter">Saudi Arabia</span> 
+            
               <span className="inline-block mx-2 font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded text-[10px]">CR: 2053122409</span>. 
             </p>
           </div>
