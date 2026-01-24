@@ -41,7 +41,7 @@ const AboutUs = () => {
             EETA UK is dedicated to helping travelers complete their UK Electronic Travel Authorisation (ETA) application with accuracy, clarity, and confidence. Our goal is to make the process easier through guided assistance, helpful tools, and responsive support—without the confusion that often comes with government portals.
             </p>
             <p>
-              We are not affiliated with the UK government. Instead, we offer a fully optional service designed for those who prefer a streamlined and supported experience when submitting their ETA application.
+            we offer a fully optional service designed for those who prefer a streamlined and supported experience when submitting their ETA application.
             </p>
           </div>
 
