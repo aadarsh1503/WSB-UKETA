@@ -36,7 +36,7 @@ const TermsOfService = () => {
       content: (
         <>
           <p className="mb-2">Service fees are disclosed prior to payment. The government fee is included in the total. We accept major cards and digital wallets.</p>
-          <p className="font-medium text-black">Refund Policy: Full refund available if cancelled before submission. Once submitted, all charges are final.</p>
+          <p className="font-medium text-black">Refund Policy: Once paid, Fees and service charges are non-refundable</p>
         </>
       )
     },
