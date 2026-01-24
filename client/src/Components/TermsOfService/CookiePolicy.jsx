@@ -7,7 +7,7 @@ const CookiePolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">This website is owned by <span className="font-bold text-black">EETA UK</span>, a Saudi Arabia company based at King Khalid Str., Dammam, Kingdom of Saudi Arabia (CR NO.: 2053122409).</p>
+          <p className="mb-2">This website is owned by <span className="font-bold text-black">EETA UK</span>, a Saudi Arabia company based at Kingdom of Saudi Arabia (CR NO.: 2053122409).</p>
           <p>We determine the purpose and scope of how cookies are used on this site.</p>
         </>
       )

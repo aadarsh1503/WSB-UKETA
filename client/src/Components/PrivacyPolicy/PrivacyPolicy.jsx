@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">EETA UK is a Saudi Arabia company based at King Khalid Str., Dammam, Kingdom of Saudi Arabia (CR NO : 2053122409).</p>
+          <p className="mb-2">EETA UK is a Saudi Arabia company based at Kingdom of Saudi Arabia (CR NO : 2053122409).</p>
           <p>We provide optional, third-party assistance for UK EETA applications. We are not affiliated with the UK government.</p>
         </>
       )
