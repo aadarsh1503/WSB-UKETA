@@ -97,7 +97,7 @@ const PurchaseRefundPolicy = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">EETA UK</p>
+            
              <p className="text-xs text-gray-500">CR NO: 2053122409</p>
           </div>
         </div>

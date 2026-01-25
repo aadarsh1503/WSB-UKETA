@@ -82,7 +82,7 @@ const TermsOfService = () => {
             </p>
           </div>
           <div className="text-right mt-4 md:mt-0">
-             <p className="text-sm font-bold">EETA UK</p>
+            
              <p className="text-xs text-gray-500">CR NO: 2053122409</p>
           </div>
         </div>

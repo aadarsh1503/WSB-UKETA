@@ -7,8 +7,8 @@ const Disclaimer = () => {
       title: "No Govt. Affiliation",
       content: (
         <>
-          <p className="mb-2">EETA UK is an independent company. We are <span className="font-bold text-black">not affiliated with</span>, endorsed by, or acting on behalf of the UK Home Office or any government body.</p>
-          <p className="text-xs text-gray-500">We offer optional support services. You may apply directly at <a href="https://www.gov.uk" className="text-black underline font-bold hover:no-underline">www.gov.uk</a> without our fees.</p>
+          <p className="mb-2">No Govt. Affiliation we are <span className="font-bold text-black">not affiliated with</span>, endorsed by, or acting on behalf of the UK Home Office or any government body.</p>
+          {/* <p className="text-xs text-gray-500">We offer optional support services. You may apply directly at <a href="https://www.gov.uk" className="text-black underline font-bold hover:no-underline">www.gov.uk</a> without our fees.</p> */}
         </>
       )
     },
@@ -78,7 +78,7 @@ const Disclaimer = () => {
             </p>
           </div>
           <div className="text-right mt-6 md:mt-0">
-             <p className="text-sm font-bold">EETA UK</p>
+            
              <p className="text-xs text-gray-500">CR NO: 2053122409</p>
           </div>
         </div>
