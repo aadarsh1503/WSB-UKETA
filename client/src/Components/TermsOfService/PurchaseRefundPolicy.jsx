@@ -8,7 +8,7 @@ const PurchaseRefundPolicy = () => {
       content: (
         <>
           <p className="mb-2">EETA UK provides optional, paid support for UK EETA applications. Our service includes human-reviewed document checks, submission support, and guidance.</p>
-          <p>We are not affiliated with the UK government. You may apply independently at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a>. This is a personalized digital support service.</p>
+          {/* <p>We are not affiliated with the UK government. You may apply independently at <a href="https://www.gov.uk" className="text-blue-700 hover:underline font-bold">gov.uk</a>. This is a personalized digital support service.</p> */}
         </>
       )
     },
@@ -30,7 +30,7 @@ const PurchaseRefundPolicy = () => {
       title: "Refund Eligibility",
       content: (
         <>
-          <p className="font-bold text-black mb-2">You may request a full refund if your application has not yet been submitted to UK authorities.</p>
+          {/* <p className="font-bold text-black mb-2">You may request a full refund if your application has not yet been submitted to UK authorities.</p> */}
           <p>Requests must be made within 90 days. Once submitted, applications cannot be cancelled or refunded. UK immigration decisions are final and outside our control.</p>
         </>
       )
@@ -49,10 +49,10 @@ const PurchaseRefundPolicy = () => {
         </>
       )
     },
-    {
-      title: "Processing Time",
-      content: "Approved refunds are processed within 5–7 business days to the original payment method. International bank processing times may vary."
-    },
+    // {
+    //   title: "Processing Time",
+    //   content: "Approved refunds are processed within 5–7 business days to the original payment method. International bank processing times may vary."
+    // },
     {
       title: "Dispute Resolution",
       content: "Please contact us before disputing a charge with your bank. We aim to resolve issues fairly. If a chargeback is filed, we reserve the right to submit evidence that the service was provided."
@@ -62,7 +62,7 @@ const PurchaseRefundPolicy = () => {
       content: (
         <>
           <p className="mb-2">We aim to process applications within 24 hours. This is not guaranteed due to potential government system delays.</p>
-          <p className="text-xs uppercase tracking-widest font-bold text-red-600">Travel Warning: If traveling within 48 hours, apply directly via the government site.</p>
+          {/* <p className="text-xs uppercase tracking-widest font-bold text-red-600">Travel Warning: If traveling within 48 hours, apply directly via the government site.</p> */}
         </>
       )
     },
