@@ -15,11 +15,11 @@ const Hero = () => {
           <h2 className="text-4xl lg:text-[55px] text-gray-900 tracking-tight leading-none mb-8">
             <span className="block">United Kingdom</span>
             <span className="block">Electronic Travel</span>
-            <span className="block">Authorization</span>
+            <span className="block">Authorisation</span>
           </h2>
           
           <p className="text-gray-700 text-lg max-w-md mb-10 leading-relaxed">
-          Your guide to understanding the  Electronic Travel Authorization (ETA) requirements and completing your application accurately and efficiently
+          Your guide to understanding the  Electronic Travel Authorisation (ETA) requirements and completing your application accurately and efficiently
           </p>
 
           <div>
@@ -34,12 +34,12 @@ const Hero = () => {
         {/* Bottom Section */}
         <div className="bg-slate-50 px-8 py-12 lg:px-20 lg:py-16">
           <h3 className="text-xl font-bold text-gray-900 mb-6">
-            What is a UK EETA and How We Can Help
+          What is UK Electronic Travel Authorisation (ETA) and how we can help
           </h3>
           
           <div className="space-y-6 text-gray-700 leading-relaxed max-w-xl">
             <p>
-              The UK Electronic Travel Authorization (ETA) is a digital travel clearance required for visitors from eligible visa-exempt countries entering the United Kingdom for tourism, business, transit, or short-term study.
+              The UK Electronic Travel Authorisation (ETA) is a digital travel clearance required for visitors from eligible visa-exempt countries entering the United Kingdom for tourism, business, transit, or short-term study.
             </p>
             <p>
               We are an independent travel assistance provider. Our role is to offer optional support and guidance with the ETA application process, helping travelers complete and submit their applications accurately and confidently.

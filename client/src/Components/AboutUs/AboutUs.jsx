@@ -58,18 +58,18 @@ const AboutUs = () => {
           </h2>
 
           {/* List Items */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col items-center justify-center gap-6">
             
             {/* Item 1 */}
-            <div className="flex items-start gap-5">
+            {/* <div className="flex items-start gap-5">
               <FaCheck className="mt-1.5 text-black flex-shrink-0" size={20} strokeWidth={2} />
               <p className="text-lg lg:text-xl text-gray-900 leading-snug">
                 Unlimited free resubmissions within two years after a passport change
               </p>
-            </div>
+            </div> */}
 
             {/* Item 2 */}
-            <div className="flex items-start gap-5">
+            <div className="flex items-center gap-5">
               <FaCheck className="mt-1.5 text-black flex-shrink-0" size={20} strokeWidth={2} />
               <p className="text-lg lg:text-xl text-gray-900 leading-snug">
                 Access to expert assistance and fast, responsive support

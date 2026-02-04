@@ -31,7 +31,7 @@ const PurchaseRefundPolicy = () => {
       content: (
         <>
           {/* <p className="font-bold text-black mb-2">You may request a full refund if your application has not yet been submitted to UK authorities.</p> */}
-          <p>Requests must be made within 90 days. Once submitted, applications cannot be cancelled or refunded. UK immigration decisions are final and outside our control.</p>
+          <p> Once submitted, applications cannot be cancelled or refunded. UK immigration decisions are final and outside our control.</p>
         </>
       )
     },

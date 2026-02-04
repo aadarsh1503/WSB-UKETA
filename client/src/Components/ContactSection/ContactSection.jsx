@@ -88,8 +88,17 @@ const ContactSection = () => {
                 Company
               </h4>
               <p className="text-xl md:text-2xl font-medium text-black">
-              EETA.UK is owned and operated by World Services Bureau ( WSB )
-              </p>
+  <a
+    href="https://eeta.uk"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-black hover:underline"
+  >
+    EETA.UK
+  </a>{" "}
+  domain is owned and operated by World Services Bureau (WSB)
+</p>
+
             </div>
 
             {/* Column 2: ADDRESS */}

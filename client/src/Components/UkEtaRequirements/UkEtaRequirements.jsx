@@ -21,7 +21,7 @@ const allCountries = [
   { name: "Costa Rica", code: "cr" },
   { name: "Croatia", code: "hr" },
   { name: "Cyprus", code: "cy" },
-  { name: "Czech Republic", code: "cz" }, // Input mein Czechia tha
+  { name: "Czech Republic", code: "cz" },
   { name: "Denmark", code: "dk" },
   { name: "Estonia", code: "ee" },
   { name: "Finland", code: "fi" },
@@ -69,7 +69,7 @@ const allCountries = [
   { name: "Romania", code: "ro" },
   { name: "Saint Kitts and Nevis", code: "kn" },
   { name: "Saint Lucia", code: "lc" },
-  { name: "Saint Vincent", code: "vc" }, // St. Vincent and the Grenadines
+  { name: "Saint Vincent", code: "vc" },
   { name: "Samoa", code: "ws" },
   { name: "San Marino", code: "sm" },
   { name: "Saudi Arabia", code: "sa" },
@@ -85,25 +85,29 @@ const allCountries = [
   { name: "Tonga", code: "to" },
   { name: "Trinidad and Tobago", code: "tt" },
   { name: "Tuvalu", code: "tv" },
-  { name: "United Arab Emirates", code: "ae" }, // Input mein UAE tha
+  { name: "United Arab Emirates", code: "ae" },
   { name: "United States", code: "us" },
   { name: "Uruguay", code: "uy" }
 ];
 
 const UkEtaRequirements = () => {
   return (
-    // Added py-16 lg:py-24 for proper gapping from the above component
     <div className="w-full bg-white flex flex-col lg:flex-row font-sans relative py-16 lg:py-24">
       
       {/* LEFT SIDE - COUNTRY LIST TABLE */}
       <div className="w-full lg:w-1/2 p-0 lg:px-12 border-b lg:border-b-0 lg:border-r border-gray-200">
+        
+        {/* NEW HEADING ADDED HERE */}
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8 px-6 lg:px-0">
+          Eligible Countries
+        </h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-gray-200 mx-auto max-w-2xl lg:max-w-none">
           {allCountries.map((country, index) => (
             <div 
               key={index} 
               className="flex items-center p-4 border-b border-r border-gray-200 bg-gray-50/30 hover:bg-gray-50 transition-colors"
             >
-              {/* Flag Image */}
               <img 
                 src={`https://flagcdn.com/w40/${country.code}.png`}
                 srcSet={`https://flagcdn.com/w80/${country.code}.png 2x`}
@@ -121,31 +125,21 @@ const UkEtaRequirements = () => {
       </div>
 
       {/* RIGHT SIDE - CONTENT */}
-      {/* 
-          1. Removed 'overflow-y-auto' -> Removes scrollbar.
-          2. Removed fixed 'h-screen' -> Prevents cutting off content.
-          3. Added 'lg:min-h-screen' + 'justify-center' -> Centers content vertically if it fits.
-          4. Kept 'lg:sticky top-0' -> Ensures it floats along with the user as they scroll flags.
-      */}
       <div className="w-full lg:w-1/2 bg-white relative">
         <div className="lg:sticky lg:top-0 lg:min-h-screen px-8 py-12 lg:pr-24 lg:pl-12 flex flex-col justify-center">
           
-          {/* Heading */}
           <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-8">
-            Who Needs a UK EETA
+            Who Needs a UK ETA
           </h2>
 
-          {/* Intro Text */}
           <p className="text-gray-700 text-lg leading-relaxed mb-8">
-            As of 2024, most travelers from visa-exempt countries will need an Electronic Travel Authorization (ETA) before visiting the United Kingdom. This includes visitors from countries such as the United States, Canada, Australia, and most of Europe.
+            As of 2024, most travelers from visa-exempt countries will need an Electronic Travel Authorisation (ETA) before visiting the United Kingdom. This includes visitors from countries such as the United States, Canada, Australia, and most of Europe.
           </p>
 
-          {/* Subheading */}
           <h3 className="text-gray-900 font-bold text-lg mb-4">
             An ETA may be required for the following types of travel:
           </h3>
 
-          {/* List */}
           <ul className="space-y-4 mb-12 text-gray-700">
             <li className="flex items-start">
               <span className="mr-2 text-black text-xl leading-none">•</span>
@@ -173,7 +167,6 @@ const UkEtaRequirements = () => {
             </li>
           </ul>
 
-          {/* Fees Section */}
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-6">
             Fees and Processing
           </h2>
@@ -182,7 +175,6 @@ const UkEtaRequirements = () => {
             Our support service includes a separate fee. Government fees are additional and disclosed before checkout.
           </p>
 
-          {/* Button */}
           <div>
             <a href='/apply'>
             <button className="bg-gray-950 cursor-pointer text-white px-10 py-4 rounded-full font-medium tracking-wide hover:bg-gray-800 transition-colors duration-200">

@@ -24,7 +24,7 @@ const TermsOfService = () => {
       )
     },
     {
-      title: "Authorization",
+      title: "Authorisation",
       content: "By using our platform, you authorize EETA UK to act on your behalf to prepare and submit your ETA application to UK authorities and communicate with third parties for this purpose."
     },
     {
