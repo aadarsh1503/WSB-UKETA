@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
       title: "Who We Are",
       content: (
         <>
-          <p className="mb-2">EETA UK is a Saudi Arabia company based at Kingdom of Saudi Arabia (CR NO : 2053122409).</p>
+          <p className="mb-2">EETA.UK domain is owned & operated by World Services Bureau, Saudi Arabia. Cr. No. 2053122409.</p>
           {/* <p>We provide optional, third-party assistance for UK EETA applications. We are not affiliated with the UK government.</p> */}
         </>
       )
@@ -58,9 +58,9 @@ const PrivacyPolicy = () => {
       content: (
         <>
           <p className="mb-2">You have the right to access, correct, delete, or restrict your data. To exercise these rights, contact us.</p>
-          <a href="https://ico.org.uk" target="_blank" rel="noreferrer" className="text-xs font-bold uppercase tracking-wider text-black border-b border-gray-300 hover:border-black transition-colors">
+          {/* <a href="https://ico.org.uk" target="_blank" rel="noreferrer" className="text-xs font-bold uppercase tracking-wider text-black border-b border-gray-300 hover:border-black transition-colors">
             File a complaint with ICO (UK) ↗
-          </a>
+          </a> */}
         </>
       )
     },
