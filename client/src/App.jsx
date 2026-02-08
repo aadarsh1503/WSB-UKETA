@@ -15,6 +15,7 @@ import PrivacyPolicy from "./Components/PrivacyPolicy/PrivacyPolicy";
 import Disclaimer from "./Components/TermsOfService/Disclaimer";
 import Navbar from "./Components/Navbar/Navbar";
 import EmailWidget from "./Components/EmailWidget/EmailWidget";
+import WhatsAppWidget from "./Components/WhatsAppWidget/WhatsAppWidget";
 
 // 3. This small internal component handles the scroll logic
 function ScrollToTop() {
@@ -48,6 +49,7 @@ function App() {
       </Routes>
 
       <EmailWidget /> 
+      <WhatsAppWidget />
 
       <Footer />
     </Router>

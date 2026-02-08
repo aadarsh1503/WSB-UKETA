@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import applicationRoutes from './routes/applicationRoutes.js';
 
 dotenv.config();
@@ -8,7 +7,6 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: '*' })); // Configure this to your frontend URL in production
 app.use(express.json());
 
 // Routes

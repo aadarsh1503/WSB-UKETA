@@ -431,7 +431,7 @@ export const submitApplication = async (req, res) => {
                   </div>
 
                   <p><strong>What is next?</strong></p>
-                  <p>We are currently verifying your documentation and submitting your details for official authorization. You will receive your UK ETA via this email address as soon as it is issued.</p>
+                  <p>We are currently verifying your documentation and submitting your details for official Authorisation. You will receive your UK ETA via this email address as soon as it is issued.</p>
                   
                   <p>Typical processing time is <strong>24 to 72 hours</strong>. We will contact you if any additional information or clearer document copies are required.</p>
 

@@ -452,7 +452,7 @@ const UKETAApplication = () => {
     );
 
     return (
-        <PayPalScriptProvider options={{ "client-id": "AQSk-kF_6PJF925qFQVBMgxq43ARQaBCyH96KPZaEhYhzUW4HsNUwox3zkKKRqNXYwTNDMV7HOiP5Dvu", currency: "USD", "disable-funding": "credit,card,paylater" }}>
+        <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "USD", "disable-funding": "credit,card,paylater" }}>
             <div className="min-h-screen bg-[#f3f6ff] py-16 px-4">
                 
                 <style>{`
