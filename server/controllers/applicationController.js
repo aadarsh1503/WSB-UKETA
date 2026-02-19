@@ -9,6 +9,122 @@ export const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } 
 }).any();
 
+// Checkout.com Payment Session Creation
+export const createPaymentSession = async (req, res) => {
+  try {
+    const { amount, currency, applicantCount, reference } = req.body;
+
+    console.log('Creating payment session with:', { amount, currency, applicantCount });
+    console.log('Using secret key:', process.env.CHECKOUT_SECRET_KEY ? 'Key exists' : 'Key missing');
+    console.log('Using processing channel:', process.env.CHECKOUT_PROCESSING_CHANNEL_ID ? 'Channel exists' : 'Channel missing');
+
+    // Create a payment link using Checkout.com API
+    const response = await fetch('https://api.sandbox.checkout.com/payment-links', {
+      method: 'POST',
+      headers: {
+        'Authorization': process.env.CHECKOUT_SECRET_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: amount,
+        currency: currency,
+        reference: reference || `UKETA-${Date.now()}`,
+        description: `UK EETA Application - ${applicantCount} applicant(s)`,
+        processing_channel_id: process.env.CHECKOUT_PROCESSING_CHANNEL_ID,
+        billing: {
+          address: {
+            country: 'US'
+          }
+        },
+        customer: {
+          email: 'customer@example.com'
+        },
+        return_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/application`
+      })
+    });
+
+    const responseText = await response.text();
+    console.log('Checkout.com Response Status:', response.status);
+    console.log('Checkout.com Response:', responseText);
+
+    if (!response.ok) {
+      console.error('Checkout.com API Error:', responseText);
+      throw new Error(`Checkout.com API returned ${response.status}: ${responseText}`);
+    }
+
+    const data = JSON.parse(responseText);
+    
+    res.json({
+      paymentLink: data._links?.redirect?.href || data.url,
+      sessionId: data.id
+    });
+
+  } catch (error) {
+    console.error('Payment session creation error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to create payment session',
+      error: error.message 
+    });
+  }
+};
+
+// Uncomment this when you have processing_channel_id configured:
+/*
+export const createPaymentSession = async (req, res) => {
+  try {
+    const { amount, currency, applicantCount, reference } = req.body;
+
+    const response = await fetch('https://api.sandbox.checkout.com/payment-links', {
+      method: 'POST',
+      headers: {
+        'Authorization': process.env.CHECKOUT_SECRET_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: amount,
+        currency: currency,
+        reference: reference || `UKETA-${Date.now()}`,
+        description: `UK EETA Application - ${applicantCount} applicant(s)`,
+        processing_channel_id: process.env.CHECKOUT_PROCESSING_CHANNEL_ID, // Add this to .env
+        billing: {
+          address: {
+            country: 'US'
+          }
+        },
+        customer: {
+          email: 'customer@example.com'
+        },
+        return_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/application`
+      })
+    });
+
+    const responseText = await response.text();
+    console.log('Checkout.com Response Status:', response.status);
+    console.log('Checkout.com Response:', responseText);
+
+    if (!response.ok) {
+      throw new Error(`Checkout.com API returned ${response.status}: ${responseText}`);
+    }
+
+    const data = JSON.parse(responseText);
+    
+    res.json({
+      paymentLink: data._links?.redirect?.href || data.url,
+      sessionId: data.id
+    });
+
+  } catch (error) {
+    console.error('Payment session creation error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to create payment session',
+      error: error.message 
+    });
+  }
+};
+*/
+
 // Upload to Cloudinary (for images)
 const uploadToCloudinary = (fileBuffer, folder) => {
   return new Promise((resolve, reject) => {

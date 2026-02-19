@@ -4,7 +4,6 @@ import {
   FaChevronDown, FaCloudUploadAlt, FaCalendarAlt, 
   FaUser, FaGlobe, FaSpinner, FaCheck, FaTrash, FaPlus, FaShieldAlt 
 } from 'react-icons/fa';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // --- FIXED PHONE INPUT IMPORT ---
 import _PhoneInput from 'react-phone-input-2';
@@ -271,12 +270,12 @@ const UKETAApplication = () => {
         return true;
     };
 
-    const handlePaymentSuccess = async (details) => {
+    const handlePaymentSuccess = async (paymentData) => {
         setIsSubmitting(true);
-        setTransactionId(details.id); // Store transaction ID immediately
+        setTransactionId(paymentData.id);
         
         const formData = new FormData();
-        formData.append('paymentId', details.id);
+        formData.append('paymentId', paymentData.id);
         formData.append('totalPaid', (applicants.length * 120).toString());
         formData.append('applicantCount', applicants.length);
 
@@ -292,12 +291,10 @@ const UKETAApplication = () => {
         });
 
         try {
-            // Show success immediately after payment
             setIsSuccess(true);
             setIsSubmitting(false);
             window.scrollTo(0, 0);
             
-            // Send data to backend asynchronously (don't wait for email)
             fetch('/api/applications', { method: 'POST', body: formData })
                 .then(res => {
                     if (!res.ok) {
@@ -311,6 +308,63 @@ const UKETAApplication = () => {
         } catch (e) { 
             alert("Payment successful but there was a network issue. Your application is being processed.");
             setIsSuccess(true);
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleCheckoutPayment = async () => {
+        if (!validateAll()) return;
+        
+        setIsSubmitting(true);
+        
+        try {
+            console.log('Starting payment process...');
+            console.log('Applicant count:', applicants.length);
+            console.log('Total amount:', applicants.length * 120);
+            
+            // Create payment link on backend
+            const response = await fetch('/api/applications/create-payment-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: applicants.length * 120 * 100, // Convert to cents
+                    currency: 'USD',
+                    applicantCount: applicants.length,
+                    reference: `UKETA-${Date.now()}`
+                })
+            });
+
+            console.log('Payment session response status:', response.status);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Payment session error:', errorData);
+                throw new Error(errorData.message || 'Failed to create payment session');
+            }
+
+            const data = await response.json();
+            console.log('Payment session created:', data);
+
+            // For now, simulate successful payment for testing
+            // In production, you would redirect to paymentLink
+            // window.location.href = data.paymentLink;
+            
+            console.log('Processing mock payment...');
+            
+            // Temporary mock for testing
+            const mockPaymentData = {
+                id: 'pay_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                amount: applicants.length * 120,
+                currency: 'USD',
+                status: 'Authorized'
+            };
+            
+            console.log('Mock payment data:', mockPaymentData);
+            await handlePaymentSuccess(mockPaymentData);
+            
+        } catch (error) {
+            console.error('Payment error:', error);
+            alert('Payment failed: ' + (error.message || 'Please try again.'));
             setIsSubmitting(false);
         }
     };
@@ -396,7 +450,7 @@ const UKETAApplication = () => {
                                 </div>
                                 <div className="text-center">
                                     <p className="text-xs text-gray-500 font-bold uppercase">Amount Paid</p>
-                                    <p className="text-xl font-black text-green-600">${applicants.length * 120}.00</p>
+                                    <p className="text-xl font-black text-green-600">{'$'}{applicants.length * 120}.00</p>
                                 </div>
                             </div>
                         </div>
@@ -452,8 +506,7 @@ const UKETAApplication = () => {
     );
 
     return (
-        <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "USD", "disable-funding": "credit,card,paylater" }}>
-            <div className="min-h-screen bg-[#f3f6ff] py-16 px-4">
+        <div className="min-h-screen bg-[#f3f6ff] py-16 px-4">
                 
                 <style>{`
                     .sexy-phone-input .form-control {
@@ -850,7 +903,7 @@ with a neutral facial expression`}
                         <div className="bg-[#002d85] p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12">
                             <div className="text-white">
                                 <p className="text-blue-300 font-black uppercase text-xs mb-2">Processing fee</p>
-                                <div className="text-7xl font-black tracking-tighter">${applicants.length * 120}.00</div>
+                                <div className="text-7xl font-black tracking-tighter">{'$'}{applicants.length * 120}.00</div>
                                 <p className="text-blue-300/60 font-bold text-sm mt-2 uppercase tracking-widest">{applicants.length} Applicant(s) Included</p>
                             </div>
                             <div className="w-full md:w-[350px]">
@@ -864,12 +917,22 @@ with a neutral facial expression`}
                                         <button onClick={() => validateAll() && setShowPayment(true)} className="w-full py-7 bg-white text-[#002d85] text-xl font-black rounded-[2rem] hover:scale-105 transition-all uppercase shadow-2xl">Confirm & Pay</button>
                                     </div>
                                 ) : (
-                                    <div className="bg-white p-4 rounded-3xl shadow-2xl">
-                                        <PayPalButtons 
-                                            createOrder={(d, a) => a.order.create({ purchase_units: [{ amount: { value: (applicants.length * 120).toString() } }] })}
-                                            onApprove={(d, a) => a.order.capture().then(handlePaymentSuccess)}
-                                        />
-                                        <button onClick={() => setShowPayment(false)} className="w-full text-center text-[10px] text-gray-400 font-bold mt-2 uppercase">← Edit Details</button>
+                                    <div className="bg-white p-6 rounded-3xl shadow-2xl">
+                                        <button 
+                                            onClick={handleCheckoutPayment}
+                                            disabled={isSubmitting}
+                                            className="w-full py-4 bg-gradient-to-r from-[#002d85] to-[#0044aa] text-white text-lg font-black rounded-2xl hover:scale-105 transition-all uppercase shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                        >
+                                            {isSubmitting ? (
+                                                <><FaSpinner className="animate-spin" /> Processing...</>
+                                            ) : (
+                                                <><FaShieldAlt /> Pay {'$'}{applicants.length * 120}.00 Securely</>
+                                            )}
+                                        </button>
+                                        <p className="text-center text-xs text-gray-500 mt-3">
+                                            🔒 Secured by Checkout.com
+                                        </p>
+                                        <button onClick={() => setShowPayment(false)} className="w-full text-center text-[10px] text-gray-400 font-bold mt-2 uppercase">{'← Edit Details'}</button>
                                     </div>
                                 )}
                             </div>
@@ -877,7 +940,7 @@ with a neutral facial expression`}
                     </div>
                 </div>
             </div>
-        </PayPalScriptProvider>
+      
     );
 };
 
