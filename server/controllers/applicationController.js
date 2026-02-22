@@ -9,54 +9,73 @@ export const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } 
 }).any();
 
-// Checkout.com Payment Session Creation
+// Tap Payments - Create Charge
 export const createPaymentSession = async (req, res) => {
   try {
     const { amount, currency, applicantCount, reference } = req.body;
 
-    console.log('Creating payment session with:', { amount, currency, applicantCount });
-    console.log('Using secret key:', process.env.CHECKOUT_SECRET_KEY ? 'Key exists' : 'Key missing');
-    console.log('Using processing channel:', process.env.CHECKOUT_PROCESSING_CHANNEL_ID ? 'Channel exists' : 'Channel missing');
+    console.log('Creating Tap payment with:', { amount, currency, applicantCount });
 
-    // Create a payment link using Checkout.com API
-    const response = await fetch('https://api.sandbox.checkout.com/payment-links', {
+    // Create a charge using Tap Payments API
+    const response = await fetch('https://api.tap.company/v2/charges', {
       method: 'POST',
       headers: {
-        'Authorization': process.env.CHECKOUT_SECRET_KEY,
+        'Authorization': `Bearer ${process.env.TAP_SECRET_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        amount: amount,
+        amount: amount / 100, // Tap uses decimal format (120.00 not 12000)
         currency: currency,
-        reference: reference || `UKETA-${Date.now()}`,
+        threeDSecure: true,
+        save_card: false,
         description: `UK EETA Application - ${applicantCount} applicant(s)`,
-        processing_channel_id: process.env.CHECKOUT_PROCESSING_CHANNEL_ID,
-        billing: {
-          address: {
-            country: 'US'
-          }
+        statement_descriptor: 'UK EETA',
+        metadata: {
+          udf1: reference || `UKETA-${Date.now()}`,
+          udf2: `${applicantCount} applicants`
+        },
+        reference: {
+          transaction: reference || `UKETA-${Date.now()}`,
+          order: reference || `UKETA-${Date.now()}`
+        },
+        receipt: {
+          email: false,
+          sms: false
         },
         customer: {
+          first_name: 'Customer',
           email: 'customer@example.com'
         },
-        return_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/application`
+        merchant: {
+          id: process.env.TAP_MERCHANT_ID
+        },
+        source: {
+          id: 'src_all'
+        },
+        post: {
+          url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/payment-callback`
+        },
+        redirect: {
+          url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/apply`
+        }
       })
     });
 
     const responseText = await response.text();
-    console.log('Checkout.com Response Status:', response.status);
-    console.log('Checkout.com Response:', responseText);
+    console.log('Tap Response Status:', response.status);
+    console.log('Tap Response:', responseText);
 
     if (!response.ok) {
-      console.error('Checkout.com API Error:', responseText);
-      throw new Error(`Checkout.com API returned ${response.status}: ${responseText}`);
+      console.error('Tap API Error:', responseText);
+      throw new Error(`Tap API returned ${response.status}: ${responseText}`);
     }
 
     const data = JSON.parse(responseText);
     
     res.json({
-      paymentLink: data._links?.redirect?.href || data.url,
-      sessionId: data.id
+      chargeId: data.id,
+      paymentUrl: data.transaction?.url,
+      status: data.status
     });
 
   } catch (error) {
@@ -64,6 +83,55 @@ export const createPaymentSession = async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Failed to create payment session',
+      error: error.message 
+    });
+  }
+};
+
+// Verify Tap Payment
+export const verifyPayment = async (req, res) => {
+  try {
+    const { tap_id } = req.body;
+
+    console.log('Verifying payment:', tap_id);
+
+    // Retrieve charge details from Tap
+    const response = await fetch(`https://api.tap.company/v2/charges/${tap_id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${process.env.TAP_SECRET_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const responseText = await response.text();
+    console.log('Tap Verification Response Status:', response.status);
+    console.log('Tap Verification Response:', responseText);
+
+    if (!response.ok) {
+      console.error('Tap Verification Error:', responseText);
+      throw new Error(`Tap API returned ${response.status}: ${responseText}`);
+    }
+
+    const data = JSON.parse(responseText);
+    
+    // Check if payment was successful
+    const isSuccess = data.status === 'CAPTURED' || data.status === 'AUTHORIZED';
+    
+    res.json({
+      success: isSuccess,
+      status: data.status,
+      chargeId: data.id,
+      amount: data.amount,
+      currency: data.currency,
+      reference: data.reference?.transaction
+    });
+
+  } catch (error) {
+    console.error('Payment verification error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to verify payment',
       error: error.message 
     });
   }
@@ -335,7 +403,7 @@ export const submitApplication = async (req, res) => {
                        </td>
                        <td align="right" style="font-family: Arial, sans-serif;">
                          <div style="background-color: #eef2ff; color: #002d85; padding: 10px 15px; font-weight: bold; font-size: 22px;">
-                           $${data.totalPaid}
+                           ${data.totalPaid}
                          </div>
                        </td>
                      </tr>
