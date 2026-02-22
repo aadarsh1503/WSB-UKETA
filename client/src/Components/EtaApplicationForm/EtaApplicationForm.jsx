@@ -180,7 +180,8 @@ const UKETAApplication = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [transactionId, setTransactionId] = useState('');
     const [showPayment, setShowPayment] = useState(false);
-    const [countryCode, setCountryCode] = useState('1'); 
+    const [countryCode, setCountryCode] = useState('1');
+    const [isVerifying, setIsVerifying] = useState(false);
     
     // Get today's date in YYYY-MM-DD format for input constraints
     const today = new Date().toISOString().split('T')[0];
@@ -218,6 +219,188 @@ const UKETAApplication = () => {
         };
         fetchCountryCode();
     }, []);
+
+    // Check for payment redirect
+    useEffect(() => {
+        console.log('Component mounted, checking for tap_id...');
+        console.log('Current URL:', window.location.href);
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const tapId = urlParams.get('tap_id');
+        
+        console.log('tap_id from URL:', tapId);
+        console.log('isVerifying:', isVerifying);
+        console.log('isSuccess:', isSuccess);
+        
+        if (tapId && !isVerifying && !isSuccess) {
+            console.log('Starting verification process...');
+            setIsVerifying(true);
+            
+            // Small delay to ensure state is set
+            setTimeout(() => {
+                verifyPaymentAndSubmit(tapId);
+            }, 100);
+        } else {
+            console.log('Verification not triggered. Conditions:', {
+                hasTapId: !!tapId,
+                isVerifying,
+                isSuccess
+            });
+        }
+    }, []);
+
+    const verifyPaymentAndSubmit = async (tapId) => {
+        try {
+            console.log('Verifying payment:', tapId);
+            
+            // Retrieve stored application data
+            const storedData = sessionStorage.getItem('pendingApplication');
+            if (!storedData) {
+                alert('Application data not found. Please start over.');
+                setIsVerifying(false);
+                window.history.replaceState({}, document.title, '/apply');
+                return;
+            }
+            
+            const { applicants: storedApplicants, globalDeclarations: storedDeclarations } = JSON.parse(storedData);
+            
+            // Restore files from base64
+            const restoredApplicants = storedApplicants.map(app => {
+                const restoredApp = { ...app };
+                
+                if (app.passportFileData) {
+                    restoredApp.passportFile = base64ToFile(
+                        app.passportFileData.data,
+                        app.passportFileData.name,
+                        app.passportFileData.type
+                    );
+                    delete restoredApp.passportFileData;
+                }
+                
+                if (app.photoFileData) {
+                    restoredApp.photoFile = base64ToFile(
+                        app.photoFileData.data,
+                        app.photoFileData.name,
+                        app.photoFileData.type
+                    );
+                    delete restoredApp.photoFileData;
+                }
+                
+                return restoredApp;
+            });
+            
+            console.log('Restored applicants:', restoredApplicants);
+            
+            // Verify payment with backend
+            const response = await fetch('/api/applications/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tap_id: tapId })
+            });
+
+            const result = await response.json();
+            console.log('Verification result:', result);
+
+            if (result.success) {
+                // Payment verified, proceed with application submission
+                const paymentData = {
+                    id: result.chargeId,
+                    amount: result.amount,
+                    currency: result.currency,
+                    status: result.status
+                };
+                
+                // Clear stored data
+                sessionStorage.removeItem('pendingApplication');
+                
+                // Clean URL
+                window.history.replaceState({}, document.title, '/apply');
+                
+                // Pass restored applicants directly to handlePaymentSuccess
+                await handlePaymentSuccessWithData(paymentData, restoredApplicants);
+            } else {
+                alert('Payment verification failed. Please contact support with reference: ' + tapId);
+                setIsVerifying(false);
+                sessionStorage.removeItem('pendingApplication');
+                window.history.replaceState({}, document.title, '/apply');
+            }
+        } catch (error) {
+            console.error('Verification error:', error);
+            alert('Payment verification failed. Please contact support.');
+            setIsVerifying(false);
+            sessionStorage.removeItem('pendingApplication');
+            window.history.replaceState({}, document.title, '/apply');
+        }
+    };
+
+    const handlePaymentSuccessWithData = async (paymentData, applicantsData) => {
+        console.log('=== handlePaymentSuccessWithData START ===');
+        console.log('Payment data:', paymentData);
+        console.log('Applicants data:', applicantsData);
+        console.log('Applicants length:', applicantsData.length);
+        console.log('First applicant:', applicantsData[0]);
+        
+        setIsSubmitting(true);
+        setTransactionId(paymentData.id);
+        
+        const formData = new FormData();
+        formData.append('paymentId', paymentData.id);
+        formData.append('totalPaid', `$${(applicantsData.length * 120).toFixed(2)}`);
+        formData.append('applicantCount', applicantsData.length);
+
+        applicantsData.forEach((app, i) => {
+            console.log(`Processing applicant ${i}:`, app);
+            Object.keys(app).forEach(key => {
+                if (!['passportFile', 'photoFile', 'extraNationalities', 'id', 'passportFileData', 'photoFileData'].includes(key)) {
+                    const value = app[key] || '';
+                    console.log(`  app_${i}_${key}:`, value);
+                    formData.append(`app_${i}_${key}`, value);
+                }
+            });
+            formData.append(`app_${i}_extraNationalities`, JSON.stringify(app.extraNationalities || []));
+            if (app.passportFile) {
+                console.log(`  passport_${i}:`, app.passportFile.name);
+                formData.append(`passport_${i}`, app.passportFile);
+            }
+            if (app.photoFile) {
+                console.log(`  photo_${i}:`, app.photoFile.name);
+                formData.append(`photo_${i}`, app.photoFile);
+            }
+        });
+
+        try {
+            console.log('Submitting application to backend...');
+            
+            const response = await fetch('/api/applications', { 
+                method: 'POST', 
+                body: formData 
+            });
+            
+            if (!response.ok) {
+                console.error('Backend submission failed');
+                throw new Error('Backend submission failed');
+            }
+            
+            console.log('Application submitted successfully');
+            console.log('=== handlePaymentSuccessWithData END ===');
+            
+            // Update state for UI
+            setApplicants(applicantsData);
+            
+            // Only set success after backend confirms
+            setIsSuccess(true);
+            setIsSubmitting(false);
+            setIsVerifying(false);
+            window.scrollTo(0, 0);
+                
+        } catch (e) { 
+            console.error('Backend error:', e);
+            alert("Payment successful but there was a network issue. Your application is being processed.");
+            setIsSuccess(true);
+            setIsSubmitting(false);
+            setIsVerifying(false);
+        }
+    };
 
     useEffect(() => {
         fetch('https://restcountries.com/v3.1/all?fields=name,flags')
@@ -271,58 +454,116 @@ const UKETAApplication = () => {
     };
 
     const handlePaymentSuccess = async (paymentData) => {
+        console.log('=== handlePaymentSuccess START ===');
+        console.log('Payment data:', paymentData);
+        console.log('Current applicants state:', applicants);
+        console.log('Applicants length:', applicants.length);
+        console.log('First applicant:', applicants[0]);
+        
         setIsSubmitting(true);
         setTransactionId(paymentData.id);
         
         const formData = new FormData();
         formData.append('paymentId', paymentData.id);
-        formData.append('totalPaid', (applicants.length * 120).toString());
+        formData.append('totalPaid', `$${(applicants.length * 120).toFixed(2)}`);
         formData.append('applicantCount', applicants.length);
 
         applicants.forEach((app, i) => {
+            console.log(`Processing applicant ${i}:`, app);
             Object.keys(app).forEach(key => {
-                if (!['passportFile', 'photoFile', 'extraNationalities'].includes(key)) {
-                    formData.append(`app_${i}_${key}`, app[key]);
+                if (!['passportFile', 'photoFile', 'extraNationalities', 'id'].includes(key)) {
+                    const value = app[key] || '';
+                    console.log(`  app_${i}_${key}:`, value);
+                    formData.append(`app_${i}_${key}`, value);
                 }
             });
-            formData.append(`app_${i}_extraNationalities`, JSON.stringify(app.extraNationalities));
-            if (app.passportFile) formData.append(`passport_${i}`, app.passportFile);
-            if (app.photoFile) formData.append(`photo_${i}`, app.photoFile);
+            formData.append(`app_${i}_extraNationalities`, JSON.stringify(app.extraNationalities || []));
+            if (app.passportFile) {
+                console.log(`  passport_${i}:`, app.passportFile.name);
+                formData.append(`passport_${i}`, app.passportFile);
+            }
+            if (app.photoFile) {
+                console.log(`  photo_${i}:`, app.photoFile.name);
+                formData.append(`photo_${i}`, app.photoFile);
+            }
         });
 
         try {
+            console.log('Submitting application to backend...');
+            
+            const response = await fetch('/api/applications', { 
+                method: 'POST', 
+                body: formData 
+            });
+            
+            if (!response.ok) {
+                console.error('Backend submission failed');
+                throw new Error('Backend submission failed');
+            }
+            
+            console.log('Application submitted successfully');
+            console.log('=== handlePaymentSuccess END ===');
+            
+            // Only set success after backend confirms
             setIsSuccess(true);
             setIsSubmitting(false);
+            setIsVerifying(false);
             window.scrollTo(0, 0);
-            
-            fetch('/api/applications', { method: 'POST', body: formData })
-                .then(res => {
-                    if (!res.ok) {
-                        console.error('Backend submission failed, but payment was successful');
-                    }
-                })
-                .catch(e => {
-                    console.error('Backend error, but payment was successful:', e);
-                });
                 
         } catch (e) { 
+            console.error('Backend error:', e);
             alert("Payment successful but there was a network issue. Your application is being processed.");
             setIsSuccess(true);
             setIsSubmitting(false);
+            setIsVerifying(false);
         }
     };
 
-    const handleCheckoutPayment = async () => {
+    const handleTapPayment = async () => {
         if (!validateAll()) return;
         
         setIsSubmitting(true);
         
         try {
-            console.log('Starting payment process...');
+            console.log('Starting Tap payment process...');
             console.log('Applicant count:', applicants.length);
             console.log('Total amount:', applicants.length * 120);
             
-            // Create payment link on backend
+            // Convert files to base64 for storage
+            const applicantsWithBase64Files = await Promise.all(applicants.map(async (app) => {
+                const appCopy = { ...app };
+                
+                if (app.passportFile) {
+                    const passportBase64 = await fileToBase64(app.passportFile);
+                    appCopy.passportFileData = {
+                        data: passportBase64,
+                        name: app.passportFile.name,
+                        type: app.passportFile.type
+                    };
+                    delete appCopy.passportFile;
+                }
+                
+                if (app.photoFile) {
+                    const photoBase64 = await fileToBase64(app.photoFile);
+                    appCopy.photoFileData = {
+                        data: photoBase64,
+                        name: app.photoFile.name,
+                        type: app.photoFile.type
+                    };
+                    delete appCopy.photoFile;
+                }
+                
+                return appCopy;
+            }));
+            
+            // Store form data in sessionStorage before redirect
+            sessionStorage.setItem('pendingApplication', JSON.stringify({
+                applicants: applicantsWithBase64Files,
+                globalDeclarations: globalDeclarations,
+                timestamp: Date.now()
+            }));
+            
+            // Create charge on backend
             const response = await fetch('/api/applications/create-payment-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -335,39 +576,133 @@ const UKETAApplication = () => {
             });
 
             console.log('Payment session response status:', response.status);
+            
+            // Get response text first to handle empty responses
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
 
             if (!response.ok) {
-                const errorData = await response.json();
+                let errorData;
+                try {
+                    errorData = responseText ? JSON.parse(responseText) : {};
+                } catch (e) {
+                    errorData = { message: responseText || 'Unknown error' };
+                }
                 console.error('Payment session error:', errorData);
                 throw new Error(errorData.message || 'Failed to create payment session');
             }
 
-            const data = await response.json();
+            const data = responseText ? JSON.parse(responseText) : {};
             console.log('Payment session created:', data);
 
-            // For now, simulate successful payment for testing
-            // In production, you would redirect to paymentLink
-            // window.location.href = data.paymentLink;
-            
-            console.log('Processing mock payment...');
-            
-            // Temporary mock for testing
-            const mockPaymentData = {
-                id: 'pay_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                amount: applicants.length * 120,
-                currency: 'USD',
-                status: 'Authorized'
-            };
-            
-            console.log('Mock payment data:', mockPaymentData);
-            await handlePaymentSuccess(mockPaymentData);
+            // Redirect to Tap payment page
+            if (data.paymentUrl) {
+                console.log('Redirecting to Tap payment page...');
+                window.location.href = data.paymentUrl;
+            } else {
+                throw new Error('No payment URL received');
+            }
             
         } catch (error) {
             console.error('Payment error:', error);
             alert('Payment failed: ' + (error.message || 'Please try again.'));
             setIsSubmitting(false);
+            sessionStorage.removeItem('pendingApplication');
         }
     };
+
+    // Helper function to convert file to base64
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    // Helper function to convert base64 back to file
+    const base64ToFile = (base64Data, filename, mimeType) => {
+        const arr = base64Data.split(',');
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mimeType });
+    };
+
+    // Verification Dialog
+    if (isVerifying) return (
+        <div className="min-h-screen bg-gradient-to-br from-[#f3f6ff] via-white to-[#f3f6ff] flex items-center justify-center p-6">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-[3rem] shadow-2xl p-12 max-w-md w-full text-center"
+            >
+                {/* Animated Spinner */}
+                <div className="relative w-32 h-32 mx-auto mb-8">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 border-8 border-[#002d85]/20 rounded-full"
+                    />
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 border-8 border-transparent border-t-[#002d85] rounded-full"
+                    />
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute inset-0 flex items-center justify-center"
+                    >
+                        <FaShieldAlt className="text-5xl text-[#002d85]" />
+                    </motion.div>
+                </div>
+
+                {/* Text */}
+                <motion.h2
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-3xl font-black text-[#002d85] mb-4 uppercase tracking-tight"
+                >
+                    Verifying Payment
+                </motion.h2>
+                
+                <motion.p
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-gray-600 mb-6"
+                >
+                    Please wait while we verify your payment and process your application...
+                </motion.p>
+
+                {/* Animated Dots */}
+                <div className="flex justify-center gap-2">
+                    {[0, 1, 2].map((i) => (
+                        <motion.div
+                            key={i}
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{
+                                duration: 0.6,
+                                repeat: Infinity,
+                                delay: i * 0.2
+                            }}
+                            className="w-3 h-3 bg-[#002d85] rounded-full"
+                        />
+                    ))}
+                </div>
+
+                <p className="text-xs text-gray-400 mt-8 font-bold uppercase tracking-widest">
+                    Do not close this window
+                </p>
+            </motion.div>
+        </div>
+    );
 
     if (isSuccess) return (
         <div className="min-h-screen mt-20 bg-gradient-to-br from-[#f3f6ff] via-white to-[#f3f6ff] flex flex-col items-center justify-center p-6">
@@ -919,7 +1254,7 @@ with a neutral facial expression`}
                                 ) : (
                                     <div className="bg-white p-6 rounded-3xl shadow-2xl">
                                         <button 
-                                            onClick={handleCheckoutPayment}
+                                            onClick={handleTapPayment}
                                             disabled={isSubmitting}
                                             className="w-full py-4 bg-gradient-to-r from-[#002d85] to-[#0044aa] text-white text-lg font-black rounded-2xl hover:scale-105 transition-all uppercase shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                         >
@@ -930,7 +1265,7 @@ with a neutral facial expression`}
                                             )}
                                         </button>
                                         <p className="text-center text-xs text-gray-500 mt-3">
-                                            🔒 Secured by Checkout.com
+                                            🔒 Secured by Tap Payments
                                         </p>
                                         <button onClick={() => setShowPayment(false)} className="w-full text-center text-[10px] text-gray-400 font-bold mt-2 uppercase">{'← Edit Details'}</button>
                                     </div>
