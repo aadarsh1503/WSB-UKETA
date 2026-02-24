@@ -636,6 +636,8 @@ export const submitApplication = async (req, res) => {
     res.status(200).json({ success: true, transactionId: data.paymentId });
 
     // Send emails asynchronously (don't block the response)
+    // TEMPORARILY DISABLED FOR TESTING
+    /*
     setImmediate(async () => {
       try {
         // 1. Send to ADMIN (Using your original 'html' variable)
@@ -659,6 +661,8 @@ export const submitApplication = async (req, res) => {
         console.error(`❌ Email sending failed for transaction ${data.paymentId}:`, emailError);
       }
     });
+    */
+    console.log(`📧 Email sending temporarily disabled for testing - Transaction: ${data.paymentId}`);
 
   } catch (error) {
     console.error("Backend Error:", error);
