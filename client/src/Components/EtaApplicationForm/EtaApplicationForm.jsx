@@ -292,7 +292,7 @@ const UKETAApplication = () => {
             console.log('Restored applicants:', restoredApplicants);
             
             // Verify payment with backend
-            const response = await fetch('https://wsb-uketa.onrender.com/api/applications/verify-payment', {
+            const response = await fetch('/api/applications/verify-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tap_id: tapId })
@@ -371,7 +371,7 @@ const UKETAApplication = () => {
         try {
             console.log('Submitting application to backend...');
             
-            const response = await fetch('https://wsb-uketa.onrender.com/api/applications', { 
+            const response = await fetch('/api/applications', { 
                 method: 'POST', 
                 body: formData 
             });
@@ -491,7 +491,7 @@ const UKETAApplication = () => {
         try {
             console.log('Submitting application to backend...');
             
-            const response = await fetch('https://wsb-uketa.onrender.com/api/applications', { 
+            const response = await fetch('/api/applications', { 
                 method: 'POST', 
                 body: formData 
             });
@@ -564,7 +564,7 @@ const UKETAApplication = () => {
             }));
             
             // Create charge on backend
-            const response = await fetch('https://wsb-uketa.onrender.com/api/applications/create-payment-session', {
+            const response = await fetch('/api/applications/create-payment-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

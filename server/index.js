@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import applicationRoutes from './routes/applicationRoutes.js';
 
 dotenv.config();
@@ -8,10 +7,6 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://wsb-uketa.vercel.app'],
-  credentials: true
-}));
 app.use(express.json());
 
 // Routes
