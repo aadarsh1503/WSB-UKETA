@@ -16,7 +16,7 @@ const WhatsAppWidget = () => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 1, duration: 0.5, type: "spring" }}
-            className="fixed bottom-6 left-6 z-50"
+            className="fixed bottom-6 left-6 z-50 flex items-center gap-3"
         >
             <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -40,13 +40,18 @@ const WhatsAppWidget = () => {
                 <div className="relative w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-2xl flex items-center justify-center">
                     <FaWhatsapp className="text-3xl text-white" />
                 </div>
-
-                {/* Tooltip */}
-                <div className="absolute left-20 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
-                    Chat with us on WhatsApp
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
-                </div>
             </motion.button>
+
+            {/* Text message - always visible */}
+            <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 1.5, duration: 0.5 }}
+                className="bg-white text-gray-800 px-4 py-3 rounded-2xl shadow-2xl border border-gray-100"
+            >
+                <div className="text-right text-sm font-semibold mb-1" style={{ direction: 'rtl' }}>للمساعدة اضغط هنا للتواصل</div>
+                <div className="text-sm font-semibold">For assistance, press here</div>
+            </motion.div>
         </motion.div>
     );
 };
