@@ -178,6 +178,8 @@ const UKETAApplication = () => {
     const [etaCountries, setEtaCountries] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isFailed, setIsFailed] = useState(false);
+    const [failureMessage, setFailureMessage] = useState('');
     const [transactionId, setTransactionId] = useState('');
     const [showPayment, setShowPayment] = useState(false);
     const [countryCode, setCountryCode] = useState('1');
@@ -249,6 +251,17 @@ const UKETAApplication = () => {
         }
     }, []);
 
+    // Auto redirect on payment failure
+    useEffect(() => {
+        if (isFailed) {
+            const timer = setTimeout(() => {
+                window.location.href = '/';
+            }, 10000);
+            
+            return () => clearTimeout(timer);
+        }
+    }, [isFailed]);
+
     const verifyPaymentAndSubmit = async (tapId) => {
         try {
             console.log('Verifying payment:', tapId);
@@ -319,14 +332,17 @@ const UKETAApplication = () => {
                 // Pass restored applicants directly to handlePaymentSuccess
                 await handlePaymentSuccessWithData(paymentData, restoredApplicants);
             } else {
-                alert('Payment verification failed. Please contact support with reference: ' + tapId);
+                // Payment failed
+                setFailureMessage(`Payment verification failed. Transaction ID: ${tapId}`);
+                setIsFailed(true);
                 setIsVerifying(false);
                 sessionStorage.removeItem('pendingApplication');
                 window.history.replaceState({}, document.title, '/apply');
             }
         } catch (error) {
             console.error('Verification error:', error);
-            alert('Payment verification failed. Please contact support.');
+            setFailureMessage('Payment verification failed. Please contact support.');
+            setIsFailed(true);
             setIsVerifying(false);
             sessionStorage.removeItem('pendingApplication');
             window.history.replaceState({}, document.title, '/apply');
@@ -703,6 +719,115 @@ const UKETAApplication = () => {
             </motion.div>
         </div>
     );
+
+    // Payment Failed Screen
+    if (isFailed) {
+        return (
+        <div className="min-h-screen mt-20 bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col items-center justify-center p-6">
+            <div className="max-w-2xl w-full">
+                {/* Failed Animation Container */}
+                <motion.div 
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="text-center mb-8"
+                >
+                    <div className="relative">
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.2, duration: 0.4 }}
+                            className="w-32 h-32 mx-auto mb-6 flex items-center justify-center"
+                        >
+                            <span className="text-8xl">😞</span>
+                        </motion.div>
+                    </div>
+                </motion.div>
+
+                {/* Failed Message */}
+                <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                    className="text-center mb-8"
+                >
+                    <h1 className="text-4xl md:text-5xl font-black text-red-600 mb-4 tracking-tight uppercase">
+                        Payment Failed
+                    </h1>
+                    <p className="text-xl text-gray-600 font-medium">
+                        We couldn't process your payment
+                    </p>
+                </motion.div>
+
+                {/* Error Details Card */}
+                <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.6 }}
+                    className="bg-white rounded-[2rem] shadow-2xl border border-red-100 p-8 mb-8"
+                >
+                    <div className="text-center">
+                        <div className="inline-flex items-center gap-3 bg-red-100 text-red-700 px-6 py-3 rounded-2xl mb-6">
+                            <FaShieldAlt className="text-lg" />
+                            <span className="font-bold uppercase tracking-widest text-sm">Transaction Failed</span>
+                        </div>
+                        
+                        <div className="bg-red-50 rounded-xl p-6 border-2 border-red-100 mb-6">
+                            <p className="text-gray-700 text-sm leading-relaxed">
+                                {failureMessage}
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* What to do next */}
+                <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.6 }}
+                    className="bg-blue-50 rounded-[2rem] border border-blue-100 p-6 mb-8"
+                >
+                    <h3 className="text-lg font-black text-[#002d85] mb-4 text-center">What should you do?</h3>
+                    <div className="space-y-3 text-sm text-gray-700">
+                        <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#002d85] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">1</div>
+                            <p><strong>Check your payment method:</strong> Ensure your card has sufficient funds and is not expired</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#002d85] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">2</div>
+                            <p><strong>Try again:</strong> Click the button below to return to the application form</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#002d85] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">3</div>
+                            <p><strong>Contact support:</strong> If the problem persists, please contact our support team</p>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Action Buttons */}
+                <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.6 }}
+                    className="flex flex-col sm:flex-row gap-4 justify-center"
+                >
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="bg-[#002d85] text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#001a4f] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    >
+                        Try Again
+                    </button>
+                    <button 
+                        onClick={() => window.location.href = '/'} 
+                        className="bg-white text-[#002d85] border-2 border-[#002d85] px-8 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#002d85] hover:text-white transition-all shadow-lg"
+                    >
+                        Return to Home
+                    </button>
+                </motion.div>
+            </div>
+        </div>
+        );
+    }
 
     if (isSuccess) return (
         <div className="min-h-screen mt-20 bg-gradient-to-br from-[#f3f6ff] via-white to-[#f3f6ff] flex flex-col items-center justify-center p-6">

@@ -9,7 +9,7 @@ export default defineConfig({
     sourcemap: true, 
     minify: 'esbuild',
   },
-  // FIX: Move proxy inside the 'server' block
+ 
   // server: {
   //   proxy: {
   //     '/api': {
